@@ -1,0 +1,2 @@
+class Operador:
+    pass

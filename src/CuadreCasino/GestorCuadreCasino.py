@@ -1,0 +1,2 @@
+class GestorCuadreCasino:
+    pass

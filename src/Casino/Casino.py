@@ -1,0 +1,4 @@
+class Casino:
+    pass
+    
+    
