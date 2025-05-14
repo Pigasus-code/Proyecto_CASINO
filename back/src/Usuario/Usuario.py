@@ -1,11 +1,13 @@
-class Soporte:
+from abc import ABC, abstractmethod
+
+class Usuario(ABC):
     
-    def __init__(self,usuario,contraseña,nombre,telefono):
+    def __init__(self,usuario,contraseña,nombre,telefono,tipo):
         self.__usuario=usuario
         self.__contraseña=contraseña
         self.__nombre=nombre
         self.__telefono=telefono
-        self.__tipo="Soporte"
+        self.__tipo=tipo
         self.__estado="Activo"
         
     @property
@@ -47,9 +49,10 @@ class Soporte:
     @property
     def estado(self):
         return self.__estado
-    
+        
+    @abstractmethod
     def __str__(self):
-        return "{} {} {} {} {} {}".format(self,self.usuario,self.contraseña,self.nombre,self.telefono,self.tipo,self.estado)
+        pass
     
     def activar(self)->bool:
         if self.__estado=="Inactivo":

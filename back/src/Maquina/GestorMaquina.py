@@ -1,4 +1,4 @@
-from src.Maquina.Maquina import Maquina
+from back.src.Maquina.Maquina import Maquina
 
 class GestorMaquina:
     
@@ -13,7 +13,7 @@ class GestorMaquina:
         """
         pass
     
-    def agregar_maquina(self,marca,modelo,serial,asset,casino,denominacion)->bool:
+    def agregar_maquina(self,marca,modelo,serial,asset,casino,denominacion):
         """
         se debe agrgar a la lista de maquinas un objeto tipo maquina con los atributos
         recividos, ademas debe escribir los datos en el archivo casino.csv para que este 
@@ -22,7 +22,7 @@ class GestorMaquina:
         """
         pass
     
-    def modificar_maquina(self,asset,atributo,nuevo_dato)->bool:
+    def modificar_maquina(self,asset,atributo,nuevo_dato):
         """
         se debe buscar el objeto tipo maquina con el asset recivido y modificar
         su atributo con la nueva informacion. Ademas en la base de datos tambien

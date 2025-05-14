@@ -1,9 +1,10 @@
-from src.GestorPrincipal import GestorPrincipal
+from front.src import controlador
 import streamlit as st
 
-def contadores():
+
+def Casinos():
     """
     crear la interfaz para que el usuarios pueda hacer uso de todas las funcionalidades
-    de agregar contadores, modificar,etc
+    de crear casinos, modificar,etc
     """
     pass

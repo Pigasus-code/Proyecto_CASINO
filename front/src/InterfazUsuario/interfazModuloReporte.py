@@ -1,4 +1,4 @@
-from src.GestorPrincipal import GestorPrincipal
+from front.src import controlador
 import streamlit as st
 
 def reportes():
