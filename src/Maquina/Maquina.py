@@ -1,3 +1,0 @@
-
-class Maquina:
-    pass
