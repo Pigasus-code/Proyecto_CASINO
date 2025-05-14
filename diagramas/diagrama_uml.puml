@@ -1,0 +1,201 @@
+@startuml CasinoDiagram
+
+package "Casino" {
+    class Casino {
+        - id: int
+        - nombre: str
+        - ubicacion: str
+        - estado: str
+        + activar(): bool
+        + desactivar(): bool
+    }
+
+    class GestorCasino {
+        + crearCasino(id: int, nombre: str, ubicacion: str): Casino
+        + obtenerCasino(id: int): Casino
+        + modificarCasino(codigo: int, atributo: str, nuevo_dato: any): bool
+        + activarCasino(codigo: int): bool
+        + desactivarCasino(codigo: int): bool
+        + filtrarCasinos(filtro: str): list
+        + listaCasinos(): list
+    }
+}
+
+package "Maquina" {
+    class Maquina {
+        - id: int
+        - tipo: str
+        - estado: str
+        - marca: str
+        - modelo: str
+        - serial: str
+        - asset: str
+        - casino: object
+        - denominacion: float
+        + activar(): bool
+        + desactivar(): bool
+    }
+
+    class GestorMaquina {
+        + agregarMaquina(marca: str, modelo: str, serial: str, asset: str, casino: str, denominacion: float): bool
+        + modificarMaquina(asset: str, atributo: str, nuevo_dato: any): bool
+        + activarMaquina(asset: str): bool
+        + desactivarMaquina(asset: str): bool
+        + listaMaquinas(): list
+    }
+}
+
+package "Usuario" {
+    class Administrador {
+        - usuario: str
+        - contraseña: str
+        - nombre: str
+        - telefono: str
+        - tipo: str
+        - estado: str
+        + activar(): bool
+        + desactivar(): bool
+    }
+
+    class Operador {
+        - usuario: str
+        - contraseña: str
+        - nombre: str
+        - telefono: str
+        - tipo: str
+        - estado: str
+        + activar(): bool
+        + desactivar(): bool
+    }
+
+    class Soporte {
+        - usuario: str
+        - contraseña: str
+        - nombre: str
+        - telefono: str
+        - tipo: str
+        - estado: str
+        + activar(): bool
+        + desactivar(): bool
+    }
+
+    class GestorUsuario {
+        + registrarUsuario(nombre: str, edad: int): bool
+        + obtenerUsuario(id: int): dict
+        + crearUsuario(usuario: str, contraseña: str, tipo: str): bool
+        + modificarUsuario(usuario: str, atributo: str, nuevo_dato: any): bool
+    }
+}
+
+package "CuadreCasino" {
+    class CuadreCasino {
+        - in_: float
+        - out: float
+        - jackpot: float
+        - billetero: float
+        - utilidad: float
+        - casino: object
+    }
+
+    class GestorCuadreCasino {
+        + totalContadoresPorCasino(fecha_inicio: str, fecha_fin: str, codigo_casino: int): tuple
+        + calculoUtilidadPorCasino(fecha_inicio: str, fecha_fin: str, codigo_casino: int): float
+        + guardarResultados(contadores: tuple, utilidad: float, casino: object): bool
+        + listaCuadreCasino(): list
+    }
+}
+
+package "CuadreMaquina" {
+    class CuadreMaquina {
+        - in_: float
+        - out: float
+        - jackpot: float
+        - billetero: float
+        - utilidad: float
+        - maquina: object
+    }
+
+    class GestorCuadreMaquina {
+        + calculoTotalContadores(fecha_inicio: str, fecha_fin: str, asset_maquina: str): tuple
+        + calculoUtilidadMaquina(fecha_inicio: str, fecha_fin: str, asset_maquina: str): float
+        + guardarResultados(contadores: tuple, utilidad: float, maquina: object): bool
+        + listaCuadreMaquina(): list
+    }
+}
+
+package "Reporte" {
+    class GestorReporte {
+        + generarReporte(tipo: str, formato: str): str
+        + generarReportePersonalizado(filtros_maquina: list, filtros_casino: list, contadores: list, fecha_inicio: str, fecha_fin: str, formato: str): str
+        + generarReporteIndividualMaquina(asset_maquina: str, contadores: list, formato: str): str
+        + generarReporteIndividualCasino(codigo_casino: int, maquinas: list, contadores: list, formato: str): str
+        + generarReporteConsolidado(contadores: list, fecha_inicio: str, fecha_fin: str, formato: str): str
+        + generarReporteEspecial(codigo_casino: int, maquinas: list, porcentaje: float, formato: str): str
+    }
+}
+
+package "Contador" {
+    class Contador {
+        - fecha: str
+        - maquina: object
+        - casino: object
+        - in_: float
+        - out: float
+        - jackpot: float
+        - billetero: float
+    }
+
+    class GestorContador {
+        + agregarRegistroContador(fecha: str, maquina: object, casino: object, in_: float, out: float, jackpot: float, billetero: float): bool
+        + modificarContador(casino: object, fecha: str, atributo: str, nuevo_dato: any): bool
+        + mostrarContadoresPorRango(fecha_inicio: str, fecha_fin: str): tuple
+        + listaContadores(): list
+    }
+}
+
+class GestorPrincipal {
+    - __gestor_maquina: GestorMaquina
+    - __gestor_casino: GestorCasino
+    - __gestor_contador: GestorContador
+    - __gestor_cuadre_maquina: GestorCuadreMaquina
+    - __gestor_cuadre_casino: GestorCuadreCasino
+    - __gestor_reporte: GestorReporte
+    - __gestor_usuario: GestorUsuario
+
+    + agregar_maquina(marca: str, modelo: str, serial: str, asset: str, casino: str, denominacion: float): None
+    + modificar_maquina(asset: str, atributo: str, nuevo_dato: any): None
+    + activar_maquina(asset: str): None
+    + desactivar_maquina(asset: str): None
+    + agregar_casino(nombre: str, direccion: str, codigo: int): None
+    + modificar_casino(codigo: int, atributo: str, nuevo_dato: any): None
+    + activar_casino(codigo: int): None
+    + desactivar_casino(codigo: int): None
+    + filtrar_casinos(filtro: str): list
+    + lista_casinos(): list
+    + lista_maquinas(casino_codigo: int): list
+    + agregar_registro_contador(fecha: str, maquina_asset: str, casino_codigo: int, in_: float, out: float, jackpot: float, billetero: float): None
+    + modificar_contador(casino_codigo: int, fecha: str, atributo: str, nuevo_dato: any): None
+    + mostrar_contadores(fecha_inicio: str, fecha_fin: str): list
+    + calculo_total_contadores(fecha_inicio: str, fecha_fin: str, asset_maquina: str): float
+    + calculo_utilidad_maquina(fecha_inicio: str, fecha_fin: str, asset_maquina: str): float
+    + guardar_resultados_maquina(): None
+    + total_contadores_por_casino(fecha_inicio: str, fecha_fin: str, codigo_casino: int): float
+    + calculo_utilidad_por_casino(fecha_inicio: str, fecha_fin: str, codigo_casino: int): float
+    + guardar_resultados_casino(): None
+    + generar_reporte(tipo: str, formato: str): str
+    + crear_usuario(usuario: str, contraseña: str, tipo: str): None
+}
+
+GestorPrincipal --> GestorCasino
+GestorPrincipal --> GestorMaquina
+GestorPrincipal --> GestorUsuario
+GestorPrincipal --> GestorCuadreCasino
+GestorPrincipal --> GestorCuadreMaquina
+GestorPrincipal --> GestorReporte
+GestorPrincipal --> GestorContador
+
+GestorUsuario --> Administrador
+GestorUsuario --> Operador
+GestorUsuario --> Soporte
+
+@enduml
