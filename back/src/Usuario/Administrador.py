@@ -2,7 +2,7 @@ from back.src.Usuario.Usuario import Usuario
 
 class Administrador(Usuario):
     
-    def __init__(self,usuario,contraseña,nombre,telefono):
+    def __init__(self,usuario:str,contraseña:str,nombre:str,telefono:str):
         super().__init__(usuario,contraseña,nombre,telefono,tipo="Administrador")
     
     def __str__(self):

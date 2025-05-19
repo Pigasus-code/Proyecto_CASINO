@@ -1,6 +1,6 @@
 class Casino:
     
-    def __init__(self,nombre:str,direccion:str,codigo:str):
+    def __init__(self,nombre:str,direccion:str,codigo:int):
         self.__nombre=nombre
         self.__direccion=direccion
         self.__codigo=codigo

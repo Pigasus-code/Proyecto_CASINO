@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class Usuario(ABC):
     
-    def __init__(self,usuario,contraseña,nombre,telefono,tipo):
+    def __init__(self,usuario:str,contraseña:str,nombre:str,telefono:str,tipo:str):
         self.__usuario=usuario
         self.__contraseña=contraseña
         self.__nombre=nombre
