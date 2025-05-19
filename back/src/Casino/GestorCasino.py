@@ -1,5 +1,6 @@
 from back.src.Casino.Casino import Casino
 from util import GestorArchivos
+
 class GestorCasino:
     
     def __init__(self):
@@ -13,8 +14,8 @@ class GestorCasino:
         if self.buscar_casino(codigo):
             return False
         try:
+            GestorArchivos.escribir_csv("CASINO/Data/Casinos.csv",[{"nombre":nombre,"direccion":direccion,"codigo":codigo,"estado":"Activo"}])
             self.__casinos.append(Casino(nombre,direccion,codigo))
-            GestorArchivos.escribir_csv("CASINO/Data/Casinos.csv",[{"nombre":nombre,"direccion":direccion,"codigo":codigo}])
             return True
         except Exception:
             return False   

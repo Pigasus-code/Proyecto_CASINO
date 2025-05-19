@@ -47,7 +47,7 @@ class Maquina:
         return self.__casino
     
     @casino.setter
-    def marca(self,casino):
+    def casino(self,casino):
         self.__casino=casino
         
     @property
