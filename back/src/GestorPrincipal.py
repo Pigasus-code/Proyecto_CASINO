@@ -9,8 +9,8 @@ from back.src.Usuario.GestorUsuario import GestorUsuario
 class GestorPrincipal:
 
     def __init__(self):
-        self.__gestor_maquina = GestorMaquina()
         self.__gestor_casino = GestorCasino()
+        self.__gestor_maquina = GestorMaquina(self.__gestor_casino)
         self.__gestor_contador = GestorContador()
         self.__gestor_cuadre_maquina = GestorCuadreMaquina()
         self.__gestor_cuadre_casino = GestorCuadreCasino()
@@ -48,7 +48,7 @@ class GestorPrincipal:
 
     def mosdificar_casino(self, codigo: int, atributo: str, nuevo_dato: any) -> bool:
         if not atributo or not nuevo_dato or not isinstance(codigo, int):
-            return False
+            return False    
         return self.__gestor_casino.modificar_casino(codigo, atributo, nuevo_dato)
 
     def activar_casino(self, codigo: int) -> bool:
