@@ -1,7 +1,7 @@
 
 class Maquina:
     
-    def __init__(self,marca:str,modelo:str,serial:str,asset:str,casino:object,denominacion:float):
+    def __init__(self,marca:str,modelo:str,serial:str,asset:int,casino:object,denominacion:float):
         self.__marca=marca
         self.__modelo=modelo
         self.__serial=serial
