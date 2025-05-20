@@ -16,6 +16,34 @@ class GestorPrincipal:
         self.__gestor_cuadre_casino = GestorCuadreCasino()
         self.__gestor_reporte = GestorReporte()
         self.__gestor_usuario = GestorUsuario()
+    
+    @property
+    def gestor_casino(self):
+        return self.__gestor_casino
+
+    @property
+    def gestor_maquina(self):
+        return self.__gestor_maquina
+
+    @property
+    def gestor_contador(self):
+        return self.__gestor_contador
+
+    @property
+    def gestor_cuadre_maquina(self):
+        return self.__gestor_cuadre_maquina
+
+    @property
+    def gestor_cuadre_casino(self):
+        return self.__gestor_cuadre_casino
+
+    @property
+    def gestor_reporte(self):
+        return self.__gestor_reporte
+
+    @property
+    def gestor_usuario(self):
+        return self.__gestor_usuario
 
     # MAQUINAS
 

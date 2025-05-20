@@ -12,8 +12,17 @@ def login():
     pass
 
 def crear_cuenta():
-    """
-    crear un formulario para crear una cuenta, debe pedir todos los atributos y el tipo
-    de cuenta que va a ser, validar que todos los campos sean completados
-    """
-    pass
+    with st.form(key="Crear cuenta",clear_on_submit=True):
+        tipo=st.selectbox("Tipo",["Administrador","Operador","Soporte"])
+        usuario=st.text_input("Usuario")
+        contraseña=st.text_input("Contraseña")
+        nombre=st.text_input("Nombre")
+        telefono=st.text_input("telefono")
+        boton_enviar=st.form_submit_button(label="Enviar")
+    if boton_enviar:
+        mensaje=controlador.crear_usuario(usuario,contraseña,tipo,nombre,telefono)
+        if mensaje:
+            st.success("Cuenta creada exitosamente")
+        else:
+            st.error("Error al crear la cuenta")
+        
