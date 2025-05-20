@@ -1,52 +1,78 @@
 from back.src.Maquina.Maquina import Maquina
+from util import GestorArchivos
 
 class GestorMaquina:
     
-    def __init__(self):
+    def __init__(self, gestor_casino):
         self.__maquinas=[]
+        self.__gestor_casino=gestor_casino
     
     def buscar_maquina(self,asset)->object:
-        """
-        se debe buscar en la lista de maquinas el objeto con el asset recivido,
-        retornar el objeto. Este metodo se usara para reutilizacion de codigo
-        en funciones donde se deba bucar un objeto tipo maquina y modificarlo 
-        """
-        pass
+        maquinas={maquina.asset:maquina for maquina in self.__maquinas}
+        return maquinas.get(asset,None)
     
-    def agregar_maquina(self,marca,modelo,serial,asset,casino,denominacion):
-        """
-        se debe agrgar a la lista de maquinas un objeto tipo maquina con los atributos
-        recividos, ademas debe escribir los datos en el archivo casino.csv para que este 
-        en la base de datos para futuras consultas y reportes. se retorna true si se pudo
-        agregar exitosamente y false sino
-        """
-        pass
+    def agregar_maquina(self,marca,modelo,serial,asset,casino,denominacion)->bool:
+        if self.buscar_maquina(asset):
+            return False
+        try:
+            GestorArchivos.escribir_csv("CASINO/Data/Maquinas.csv",[{"marca":marca,"modelo":modelo,"serial":serial,"asset":asset,"casino":casino.codigo,"denominacion":denominacion,"estado":"Activa"}])
+            self.__maquinas.append(Maquina(marca,modelo,serial,asset,casino,denominacion))
+            return True
+        except Exception:
+            return False  
     
-    def modificar_maquina(self,asset,atributo,nuevo_dato):
-        """
-        se debe buscar el objeto tipo maquina con el asset recivido y modificar
-        su atributo con la nueva informacion. Ademas en la base de datos tambien
-        debe quedar el cambio registrado. se retorna true si la modificacion fue exitosa
-        de lo contrario false
-        """
-        pass
+    def modificar_maquina(self,asset,atributo,nuevo_dato)->bool:
+        maquina=self.buscar_maquina(asset)
+        if not maquina :
+            return False
+        try:
+            if atributo=="marca":
+                maquina.marca=nuevo_dato
+            elif atributo=="modelo":
+                maquina.modelo=nuevo_dato
+            elif atributo=="serial":
+                maquina.serial=nuevo_dato
+            elif atributo=="asset":
+                if self.buscar_maquina(nuevo_dato):
+                    return False
+                maquina.asset=nuevo_dato
+            elif atributo=="casino":
+                casino = self.__gestor_casino.buscar_casino(nuevo_dato)
+                if not casino:
+                    return False
+                maquina.casino=casino
+            else:
+                return False
+            GestorArchivos.modificar("CASINO/Data/Maquinas.csv","asset",str(asset),str(atributo),nuevo_dato)
+            return True
+        except Exception:
+            return False
     
     def activar_maquina(self,asset)->bool:
-        """
-        se debe buscar el objeto tipo maquina con el asset recivido y modificar
-        su estado haciendo uso del metodo de la calse maquina. se retorna true si la activacion
-        fue exitosa de lo contrario false
-        """
-        pass
+        maquina=self.buscar_maquina(asset) 
+        if not maquina :
+            return False
+        if maquina.activar():
+            try:
+                GestorArchivos.modificar("CASINO/Data/Maquinas.csv","asset",str(asset),"estado","Activa")
+                return True
+            except Exception:
+                return False
+        else:
+            return False
     
     def desactivar_maquina(self,asset)->bool:
-        """
-        se debe buscar el objeto tipo maquina con el asset recivido y modificar
-        su estado haciendo uso del metodo de la calse maquina. se retorna true si la inactivacion
-        fue exitosa de lo contrario false
-        """
-        pass
+        maquina=self.buscar_maquina(asset) 
+        if not maquina :
+            return False
+        if maquina.desactivar():
+            try:
+                GestorArchivos.modificar("CASINO/Data/Maquinas.csv","asset",str(asset),"estado","Inactiva")
+                return True
+            except Exception:
+                return False
+        else:
+            return False
 
-    #metodo para el gestor contador
     def lista_maquinas(self)->list:
         return self.__maquinas

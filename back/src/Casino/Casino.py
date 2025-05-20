@@ -1,6 +1,6 @@
 class Casino:
     
-    def __init__(self,nombre:str,direccion:str,codigo:str):
+    def __init__(self,nombre:str,direccion:str,codigo:int):
         self.__nombre=nombre
         self.__direccion=direccion
         self.__codigo=codigo
@@ -29,6 +29,10 @@ class Casino:
     @codigo.setter
     def codigo(self,codigo):
         self.__codigo=codigo
+        
+    @property
+    def estado(self):
+        return self.__estado
     
     def __str__(self):
         return "{} {} {} {}".format(self.__nombre,self.__direccion,self.__codigo,self.__estado)
