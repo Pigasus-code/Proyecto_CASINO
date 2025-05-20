@@ -41,11 +41,11 @@ def listar_maquinas(casino_codigo: int) -> list:
 
 # -------------------- Métodos para Contadores --------------------
 
-def agregar_registro_contador(fecha: str, maquina_asset: int, casino_codigo: int, in_: float, out: float, jackpot: float, billetero: float) -> bool:
-    return gestor.agregar_registro_contador(fecha, maquina_asset, casino_codigo, in_, out, jackpot, billetero)
+def agregar_registro_contador(codigo:int, fecha: str, maquina_asset: int, casino_codigo: int, in_: float, out: float, jackpot: float, billetero: float) -> bool:
+    return gestor.agregar_registro_contador(codigo,fecha, maquina_asset, casino_codigo, in_, out, jackpot, billetero)
 
-def modificar_contador(casino_codigo: int, fecha: str, atributo: str, nuevo_dato: any) -> bool:
-    return gestor.modificar_contador(casino_codigo, fecha, atributo, nuevo_dato)
+def modificar_contador(codigo:int, fecha: str, atributo: str, nuevo_dato: any) -> bool:
+    return gestor.modificar_contador(codigo, fecha, atributo, nuevo_dato)
 
 def mostrar_contadores(fecha_inicio: str, fecha_fin: str) -> tuple:
     return gestor.mostrar_contadores(fecha_inicio, fecha_fin)
