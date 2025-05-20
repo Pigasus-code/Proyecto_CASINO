@@ -1,6 +1,7 @@
 class Contador:
     
-    def __init__(self,fecha:str,maquina:object,casino:object,in_:float,out:float,jackpot:float,billetero:float):
+    def __init__(self,codigo:int,fecha:str,maquina:object,casino:object,in_:float,out:float,jackpot:float,billetero:float):
+        self.__codigo=codigo
         self.__fecha=fecha
         self.__maquina=maquina
         self.__casino=casino
@@ -8,15 +9,14 @@ class Contador:
         self.__out=out
         self.__jackpot=jackpot
         self.__billetero=billetero
-    
+        
+    @property
+    def codigo(self):
+        return self.__codigo
     
     @property
     def fecha(self):
         return self.__fecha
-
-    @fecha.setter
-    def fecha(self, fecha):
-        self.__fecha = fecha
         
     @property
     def maquina(self):
@@ -60,5 +60,5 @@ class Contador:
     
     def __str__(self):
         return "Fecha: {}\nMauina: {}\nCasino : {}\nIn: {}\nOut :{}\nJackpot: {}\nBilletero: {}".format(
-            self.__fecha,self.__maquina,self.__casino,self.__in,self.__out,self.__jackpot,self.__billetero)
+            self.__fecha,self.__maquina.asset,self.__casino.codigo,self.__in,self.__out,self.__jackpot,self.__billetero)
     
