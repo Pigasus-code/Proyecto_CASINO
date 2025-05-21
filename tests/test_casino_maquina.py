@@ -18,34 +18,33 @@ class TestCasinoMaquina(unittest.TestCase):
     def test_agregar_maquina(self):
         self.gestor.agregar_casino("juan", "calle 23", 1)
         self.gestor.agregar_maquina("macvc", "hdfd", "2113", 1, 3, 230.3)
-        maquina = self.gestor.gestor_maquina.buscar_maquina(1)
+        maquina = self.gestor.gestor_maquina.buscar_maquina(3)
         self.assertIsNotNone(maquina)
-        self.assertEqual(maquina.nombre, "macvc")
+        self.assertEqual(maquina.marca, "macvc")
 
     def test_modificar_maquina(self):
         self.gestor.agregar_casino("juan", "calle 23", 1)
         self.gestor.agregar_casino("samuel", "calle 13", 2)
         self.gestor.agregar_maquina("macvc", "hdfd", "2113", 1, 3, 230.3)
-        self.gestor.modificar_maquina(1, "casino", 2)
-        maquina = self.gestor.gestor_maquina.buscar_maquina(1)
-        self.assertEqual(maquina.id_casino, 2)
+        self.gestor.modificar_maquina(3, "casino", 2)
+        maquina = self.gestor.gestor_maquina.buscar_maquina(3)
+        self.assertEqual(maquina.casino.codigo, 2)
 
     def test_activar_desactivar_maquina(self):
         self.gestor.agregar_casino("juan", "calle 23", 1)
         self.gestor.agregar_maquina("macvc", "hdfd", "2113", 1, 3, 230.3)
 
-        self.gestor.desactivar_maquina(1)
-        maquina = self.gestor.gestor_maquina.buscar_maquina(1)
-        self.assertFalse(maquina.activa)
+        self.gestor.desactivar_maquina(3)
+        maquina = self.gestor.gestor_maquina.buscar_maquina(3)
+        self.assertEqual(maquina.estado, "Inactiva")
 
-        self.gestor.activar_maquina(1)
-        maquina = self.gestor.gestor_maquina.buscar_maquina(1)
-        self.assertTrue(maquina.activa)
+        self.gestor.activar_maquina(3)
+        maquina = self.gestor.gestor_maquina.buscar_maquina(3)
+        self.assertEqual(maquina.estado, "Activa")
 
     def test_desactivar_maquina_inexistente(self):
-        with self.assertRaises(Exception):  # ajusta si tu método no lanza excepción
-            self.gestor.desactivar_maquina(999)
+        resultado = self.gestor.desactivar_maquina(999)
+        self.assertFalse(resultado)
 
 if __name__ == '__main__':
     unittest.main()
-
