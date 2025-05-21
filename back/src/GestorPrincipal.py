@@ -16,6 +16,34 @@ class GestorPrincipal:
         self.__gestor_cuadre_casino = GestorCuadreCasino()
         self.__gestor_reporte = GestorReporte()
         self.__gestor_usuario = GestorUsuario()
+    
+    @property
+    def gestor_casino(self):
+        return self.__gestor_casino
+
+    @property
+    def gestor_maquina(self):
+        return self.__gestor_maquina
+
+    @property
+    def gestor_contador(self):
+        return self.__gestor_contador
+
+    @property
+    def gestor_cuadre_maquina(self):
+        return self.__gestor_cuadre_maquina
+
+    @property
+    def gestor_cuadre_casino(self):
+        return self.__gestor_cuadre_casino
+
+    @property
+    def gestor_reporte(self):
+        return self.__gestor_reporte
+
+    @property
+    def gestor_usuario(self):
+        return self.__gestor_usuario
 
     # MAQUINAS
 
@@ -71,26 +99,22 @@ class GestorPrincipal:
 
     # CONTADORES
 
-    def agregar_registro_contador(self, fecha: str, maquina_asset: int, casino_codigo: int, in_: float, out: float, jackpot: float, billetera: float) -> bool:
-        if not fecha or not isinstance(maquina_asset, int) or not isinstance(casino_codigo, int) or not isinstance(in_, float) or not isinstance(out, float) or not isinstance(jackpot, float) or not isinstance(billetera, float):
+    def agregar_registro_contador(self,codigo:int, fecha: str, maquina_asset: int, casino_codigo: int, in_: float, out: float, jackpot: float, billetera: float) -> bool:
+        if not fecha or not isinstance(maquina_asset, int) or not isinstance(casino_codigo, int) or not isinstance(in_, float) or not isinstance(codigo,int) or not isinstance(out, float) or not isinstance(jackpot, float) or not isinstance(billetera, float):
             return False
         maquina = self.__gestor_maquina.buscar_maquina(maquina_asset)
         casino = self.__gestor_casino.buscar_casino(casino_codigo)
         if not maquina or not casino:
             return False
-        return self.__gestor_contador.agregar_registro_contador(fecha, maquina, casino, in_, out, jackpot, billetera)
+        return self.__gestor_contador.agregar_registro_contador(codigo, fecha, maquina, casino, in_, out, jackpot, billetera)
 
-    def modificar_contador(self, casino_codigo: int, fecha: str, atributo: str, nuevo_dato: any) -> bool:
-        if not fecha or not atributo or not nuevo_dato or not isinstance(casino_codigo, int):
+    def modificar_contador(self, codigo: int, atributo: str, nuevo_dato: any) -> bool:
+        if not isinstance(codigo,int) or not atributo or not nuevo_dato :
             return False
-        casino = self.__gestor_casino.buscar_casino(casino_codigo)
-        if not casino:
-            return False
-        return self.__gestor_contador.modificar_contador(casino, fecha, atributo, nuevo_dato)
+        return self.__gestor_contador.modificar_contador(codigo, atributo, nuevo_dato)
 
     def mostrar_contadores(self, fecha_inicio: str, fecha_fin: str) -> list:
-        lista_contadores = self.lista_contadores()
-        return self.__gestor_contador.mostrar_contadores_por_rango(fecha_inicio, fecha_fin, lista_contadores)
+        return self.__gestor_contador.mostrar_contadores_por_rango(fecha_inicio, fecha_fin)
 
     def lista_contadores(self) -> list:
         return self.__gestor_contador.lista_contadores()
@@ -103,7 +127,7 @@ class GestorPrincipal:
 
     def calculo_utilidad_maquina(self, fecha_inicio: str, fecha_fin: str, asset_maquina: int) -> float:
         lista_contadores = self.lista_contadores()
-        return self.__gestor_cuadre_maquina.calculo_total_contadores(fecha_inicio, fecha_fin, asset_maquina, lista_contadores)
+        return self.__gestor_cuadre_maquina.calculo_utilidad_maquina(fecha_inicio, fecha_fin, asset_maquina, lista_contadores)
 
     def guardar_resultados_maquina(self, contadores: tuple, utilidad: float, asset_maquina: int) -> bool:
         if not contadores or not isinstance(utilidad, float) or not isinstance(asset_maquina, int):
@@ -117,11 +141,11 @@ class GestorPrincipal:
 
     def total_contadores_por_casino(self, fecha_inicio: str, fecha_fin: str, codigo_casino: int) -> tuple:
         lista_contadores = self.lista_contadores()
-        return self.__gestor_cuadre_maquina.calculo_total_contadores(fecha_inicio, fecha_fin, codigo_casino, lista_contadores)
+        return self.__gestor_cuadre_casino.total_contadores_por_casino(fecha_inicio, fecha_fin, codigo_casino, lista_contadores)
 
     def calculo_utilidad_por_casino(self, fecha_inicio: str, fecha_fin: str, codigo_casino: int) -> float:
         lista_contadores = self.lista_contadores()
-        return self.__gestor_cuadre_maquina.calculo_total_contadores(fecha_inicio, fecha_fin, codigo_casino, lista_contadores)
+        return self.__gestor_cuadre_casino.calculo_utilidad_por_casino(fecha_inicio, fecha_fin, codigo_casino, lista_contadores)
 
     def guardar_resultados_casino(self, contadores: tuple, utilidad: float, codigo_casino: int) -> bool:
         if not contadores or not isinstance(utilidad, float) or not isinstance(codigo_casino, int):
@@ -161,7 +185,7 @@ class GestorPrincipal:
             return False
         return self.__gestor_usuario.crear_usuario(usuario, contraseña, nombre, telefono, tipo)
 
-    def modificar_usuario(self, usuario: str, atributo: str, nuevo_dato: object) -> bool:
+    def modificar_usuario(self, usuario: str, atributo: str, nuevo_dato: any) -> bool:
         if not usuario or not atributo or not nuevo_dato:
             return False
         return self.__gestor_usuario.modificar_usuario(usuario, atributo, nuevo_dato)

@@ -1,33 +1,61 @@
 from back.src.CuadreCasino.CuadreCasino import CuadreCasino
+from util import GestorArchivos
+
 
 class GestorCuadreCasino:
     
     def __init__(self):
         self.__cuadre_casino=[]
         
-    def total_contadores_por_casino(self,fecha_inicio,fecha_fin,codigo_casino,lista_contadores)->tuple:
-        """
-        se debe calcular el total de los contadores de todas las maquina de un casino.
-        debe retornar una tupla con el valor de cada contador despues de hacer el calculo
         
-        """
-        pass
+    def sumar_contadores(self,contadores):
+        suma = {"in_": 0, "out": 0, "jackpot": 0, "billetero": 0}
+        for c in contadores:
+            suma["in_"] += c.in_
+            suma["out"] += c.out
+            suma["jackpot"] += c.jackpot
+            suma["billetero"] += c.billetero
+        return suma
+    
+    def total_contadores_por_casino(self,fecha_inicio,fecha_fin,codigo_casino,lista_contadores)->tuple:
+        inicicial=list(filter(lambda contador: contador.casino.codigo==codigo_casino and contador.fecha==fecha_inicio,lista_contadores))
+        final=list(filter(lambda contador: contador.casino.codigo==codigo_casino and contador.fecha==fecha_fin,lista_contadores))
+        if not inicicial or not final:
+            return None
+        contadores_iniciales=self.sumar_contadores(inicicial)
+        contadores_finales=self.sumar_contadores(final)
+        contadores=(
+            contadores_finales["in_"]-contadores_iniciales["in_"],
+            contadores_finales["out"]-contadores_iniciales["out"],
+            contadores_finales["jackpot"]-contadores_iniciales["jackpot"],
+            contadores_finales["billetero"]-contadores_iniciales["billetero"]
+        )
+        return tuple(map(lambda x: round(x,1),contadores))
+        
     
     def calculo_utilidad_por_casino(self,fecha_inicio,fecha_fin,codigo_casino,lista_contadores)->float:
-        """
-        se debe calcular la utilidad total de un casino, esto se hace sumando las utilidades
-        de cada maquina, debe retornar la utilidad
-        """
-        pass
+        inicicial=list(filter(lambda contador: contador.casino.codigo==codigo_casino and contador.fecha==fecha_inicio,lista_contadores))
+        final=list(filter(lambda contador: contador.casino.codigo==codigo_casino and contador.fecha==fecha_fin,lista_contadores))
+        if not inicicial or not final:
+            return None
+        contadores_iniciales=self.sumar_contadores(inicicial)
+        contadores_finales=self.sumar_contadores(final)
+        total_in_=contadores_finales["in_"]-contadores_iniciales["in_"]
+        total_out=contadores_finales["out"]-contadores_iniciales["out"]
+        total_jackpot=contadores_finales["jackpot"]-contadores_iniciales["jackpot"]
+        utilidad=(total_in_)-(total_out + total_jackpot)
+        return round(utilidad,1)
     
     def guardar_resultados(self,contadores:tuple,utilidad,casino:object):
-        """
-        se debe agregar a la lista cuedre_casino un objeto de tipo cuadre casino
-        y mandarle los atributos de cada contador (in,out,jackpot,billetero) que se resiven
-        en tupla, la utilidad total del casino y el objeto casino. Tambien se debe agregar esta 
-        informacion en el archivo csv para que quede un registro en la base de datos
-        """
-        pass
+        if not contadores or not utilidad:
+            return False
+        try:
+            in_,out,jackpot,billetero=contadores
+            GestorArchivos.escribir_csv("CASINO/Data/CuadrePorCasino.csv",[{"in":in_,"out":out,"jackpot":jackpot,"billetero":billetero,"utilidad":utilidad,"casino":casino.codigo}])
+            self.__cuadre_casino.append(CuadreCasino(in_,out,jackpot,billetero,utilidad,casino))
+            return True
+        except:
+            return False
 
     def lista_cuadre_casino(self)->list:
         return self.__cuadre_casino

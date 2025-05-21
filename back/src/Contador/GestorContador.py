@@ -1,38 +1,47 @@
 from back.src.Contador.Contador import Contador
+from util import GestorArchivos
+
 
 class GestorContador:
     
     def __init__(self):
         self.__contadores=[]
+        
+    def buscar_contador(self,codigo)->object:
+        contadores={contador.codigo:contador for contador in self.__contadores}
+        return contadores.get(codigo,None)
     
-    def agregar_registro_contador(self,fecha,maquina,casino,in_,out,jackpot,billetera):
-        """
-        se debe agregar a la lista de contadores un objeto de tipo contador con los atributos
-        recibidos. Ademas se debe escribir todos los datos en el archivo contadores.csv 
-        para que quede un registro en la base de datos. Tener en cuenta que los atributos
-        maquina y casino son objetos de sus respectivas clases, por lo que al escribirlo se debe
-        acceder a los atributos y separarlos por slash ejemplo: 
-        casino.nombre/casino.direccion/casino.codigo ademas en maquina en el atributo casino
-        se debe mostrar solo el asset. Debe retornar un true si fue exitosa la operacion
-        de lo contrario un false
-        """
-        pass
+    def agregar_registro_contador(self,codigo,fecha,maquina,casino,in_,out,jackpot,billetero)->bool:
+        try:
+            GestorArchivos.escribir_csv("CASINO/Data/Contadores.csv",[{"codigo":codigo,"fecha":fecha,"maquina":maquina.asset,"casino":casino.codigo,"in":in_,"out":out,"jackpot":jackpot,"billetero":billetero}])
+            self.__contadores.append(Contador(codigo,fecha,maquina,casino,in_,out,jackpot,billetero))
+            return True
+        except Exception:
+            return False   
     
-    def modificar_contador(self,casino,fecha,atributo,nuevo_dato):
-        """
-        Se debe buscar en la lista de contadores el objeto con el casino recivido
-        y modificarle un atributo, este cambio tambien debe quedar reflejado en la base de datos
-        volviendo a escribir con la informacion actualizada
-        """
-        pass
+    def modificar_contador(self,codigo,atributo,nuevo_dato)->bool:
+        contador=self.buscar_contador(codigo)
+        if not contador:
+            return False
+        try:
+            if atributo=="in":
+                contador.in_=nuevo_dato
+            elif atributo=="out":
+                contador.out=nuevo_dato
+            elif atributo=="jackpot":
+                contador.jackpot=nuevo_dato
+            elif atributo=="billetero":
+                contador.billetero=nuevo_dato
+            else:
+                return False
+            GestorArchivos.modificar("CASINO/Data/Contadores.csv","codigo",str(codigo),atributo,nuevo_dato)
+            return True
+        except Exception:
+            return False
     
-    def mostrar_contadores_por_rango(self,fecha_inicio,fecha_fin,lista_contadores)->tuple:
-        """
-        se debe buscar en la lista de contadores los objetos con las fecha recividas
-        y devolver una tupla con estos dos.
-        """
-        pass
+    def mostrar_contadores_por_rango(self,fecha_inicio,fecha_fin)->tuple:
+        contadores=tuple(filter(lambda contador: contador.fecha>=fecha_inicio and contador.fecha<=fecha_fin,self.__contadores))
+        return contadores
     
-    #metodo para el gestor de reportes
     def lista_contadores(self)->list:
         return self.__contadores

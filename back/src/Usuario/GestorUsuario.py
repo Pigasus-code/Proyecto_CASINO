@@ -1,33 +1,77 @@
 from back.src.Usuario.Administrador import Administrador
 from back.src.Usuario.Operador import Operador
 from back.src.Usuario.Soporte import Soporte
+from util import GestorArchivos
 
 class GestorUsuario:
     
     def __init__(self):
         self.__usuarios=[]
         
+    def buscar_usuario(self,name_usuario):
+        usuarios={u.usuario:u for u in self.__usuarios }
+        return usuarios.get(name_usuario,None)
+        
     def crear_usuario(self,usuario,contraseña,nombre,telefono,tipo):
-        """
-        se debe agregar a la lista de usurios un usuario del tipo que se recibe
-        crrando el objeto con los atributos recividos, ademas se debe escribir en el 
-        archivo usuarios.csv la informacion para que quede un registro en la base de datos.
-        Se debe validar que no existan usuarios con el mismo nombre de usuario, debe retoran true
-        si le creacion fue exitosa de lo contrario false
-        """
-        pass
+        if self.buscar_usuario(usuario):
+            return False
+        try:
+            GestorArchivos.escribir_csv("CASINO/Data/Users.csv",[{"usuario":usuario,"contraseña":contraseña,"nombre":nombre,"telefono":telefono,"tipo":tipo,"estado":"Activo"}])
+            if tipo=="Administrador":
+                self.__usuarios.append(Administrador(usuario,contraseña,nombre,telefono))
+            elif tipo=="Operador":
+                self.__usuarios.append(Operador(usuario,contraseña,nombre,telefono))
+            elif tipo=="Soporte":
+                self.__usuarios.append(Soporte(usuario,contraseña,nombre,telefono))
+            return True
+        except:
+            return False
     
-    def modificar_usuario(self,usuario,atributo,nuevo_dato)->bool:
-        """
-        se debe buscar en la lista de usuarios y modificar el atributo, esto debe quedar
-        registrado en el archivo usuarios.csv para que quede evidencia en la base de datos y 
-        estar actualizada
-        """
-        pass
+    def modificar_usuario(self,name_usuario,atributo,nuevo_dato)->bool:
+        usuario=self.buscar_usuario(name_usuario)
+        if not usuario :
+            return False
+        try:
+            if atributo=="usuario":
+                if self.buscar_usuario(nuevo_dato):
+                    return False
+                usuario.usuario=nuevo_dato
+            elif atributo=="contraseña":
+                usuario.contraseña=nuevo_dato
+            elif atributo=="nombre":
+                usuario.nombre=nuevo_dato
+            elif atributo=="telefono":
+                usuario.telefono=nuevo_dato
+            else:
+                return False
+            GestorArchivos.modificar("CASINO/Data/Users.csv","usuario",name_usuario,atributo,nuevo_dato)
+            return True
+        except Exception:
+            return False
     
-    def activar_usuario(self,usuario:str)->bool:
-        pass
+    def activar_usuario(self,name_usuario:str)->bool:
+        usuario=self.buscar_usuario(name_usuario)
+        if not usuario :
+            return False
+        if usuario.activar():
+            try:
+                GestorArchivos.modificar("CASINO/Data/Users.csv","usuario",name_usuario,"estado","Activo")
+                return True
+            except Exception:
+                return False
+        else:
+            return False
     
-    def desactivar_usuario(self,usuario:str)->bool:
-        pass
+    def desactivar_usuario(self,name_usuario:str)->bool:
+        usuario=self.buscar_usuario(name_usuario)
+        if not usuario :
+            return False
+        if usuario.desactivar():
+            try:
+                GestorArchivos.modificar("CASINO/Data/Users.csv","usuario",name_usuario,"estado","Inactivo")
+                return True
+            except Exception:
+                return False
+        else:
+            return False
     
