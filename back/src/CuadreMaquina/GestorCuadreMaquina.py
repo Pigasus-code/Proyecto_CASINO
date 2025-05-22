@@ -6,7 +6,9 @@ class GestorCuadreMaquina:
     def __init__(self):
         self.__cuadre_maquina=[]
     
-
+    def set_cuadre_maquinas(self,lista_cuadre_maquinas):
+        self.__cuadre_maquina=lista_cuadre_maquinas
+    
     def calculo_total_contadores(self,fecha_inicio,fecha_fin,asset_maquina,lista_contadores)->tuple:
         contadores=list(filter(lambda contador: contador.maquina.asset==asset_maquina and (contador.fecha==fecha_inicio or contador.fecha==fecha_fin),lista_contadores))
         if len(contadores)!=2:

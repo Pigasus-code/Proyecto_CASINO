@@ -6,6 +6,9 @@ class GestorContador:
     
     def __init__(self):
         self.__contadores=[]
+    
+    def set_contadores(self,lista_contadores):
+        self.__contadores=lista_contadores
         
     def buscar_contador(self,codigo)->object:
         contadores={contador.codigo:contador for contador in self.__contadores}

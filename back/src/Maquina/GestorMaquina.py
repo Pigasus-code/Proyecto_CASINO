@@ -7,6 +7,9 @@ class GestorMaquina:
         self.__maquinas=[]
         self.__gestor_casino=gestor_casino
     
+    def set_maquinas(self,lista_maquinas):
+        self.__maquinas=lista_maquinas
+    
     def buscar_maquina(self,asset)->object:
         maquinas={maquina.asset:maquina for maquina in self.__maquinas}
         return maquinas.get(asset,None)

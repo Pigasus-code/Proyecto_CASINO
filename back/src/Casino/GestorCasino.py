@@ -5,7 +5,10 @@ class GestorCasino:
     
     def __init__(self):
         self.__casinos=[]
-        
+
+    def set_casinos(self,lista_casinos):
+        self.__casinos=lista_casinos
+    
     def buscar_casino(self,codigo)->object:
         casinos={casino.codigo:casino for casino in self.__casinos}
         return casinos.get(codigo,None)
