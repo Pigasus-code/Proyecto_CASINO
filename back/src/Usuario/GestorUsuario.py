@@ -8,6 +8,9 @@ class GestorUsuario:
     def __init__(self):
         self.__usuarios=[]
         
+    def set_usuarios(self,lista_usuarios):
+        self.__usuarios=lista_usuarios
+        
     def buscar_usuario(self,name_usuario):
         usuarios={u.usuario:u for u in self.__usuarios }
         return usuarios.get(name_usuario,None)

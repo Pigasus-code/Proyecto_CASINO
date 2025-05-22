@@ -7,7 +7,10 @@ class GestorCuadreCasino:
     def __init__(self):
         self.__cuadre_casino=[]
         
-        
+    def set_cuadre_casinos(self,lista_cuadre_casinos):
+        self.__cuadre_casino=lista_cuadre_casinos  
+    
+    
     def sumar_contadores(self,contadores):
         suma = {"in_": 0, "out": 0, "jackpot": 0, "billetero": 0}
         for c in contadores:

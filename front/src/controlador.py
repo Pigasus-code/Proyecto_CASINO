@@ -1,6 +1,10 @@
 from back.src.GestorPrincipal import GestorPrincipal
 
-gestor = GestorPrincipal()
+gestor = None
+
+def set_gestor(global_gestor:GestorPrincipal):
+    global gestor
+    gestor = global_gestor
 
 # -------------------- Métodos para Casinos --------------------
 
@@ -110,7 +114,7 @@ def generar_reporte_especial(codigo_casino, asset_maquinas, porcentaje, formato)
 # -------------------- Métodos para Usuarios --------------------
 
 def crear_usuario(usuario: str, contraseña: str, tipo: str, nombre: str, telefono: str) -> bool:
-    return gestor.crear_usuario(usuario, contraseña, tipo, nombre, telefono)
+    return gestor.crear_usuario(usuario, contraseña, nombre, telefono,tipo)
 
 def modificar_usuario(usuario: str, atributo: str, nuevo_dato: any)-> bool:
     return gestor.modificar_usuario(usuario, atributo, nuevo_dato)
