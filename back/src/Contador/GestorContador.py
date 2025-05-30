@@ -14,8 +14,9 @@ class GestorContador:
         contadores={contador.codigo:contador for contador in self.__contadores}
         return contadores.get(codigo,None)
     
-    def agregar_registro_contador(self,codigo,fecha,maquina,casino,in_,out,jackpot,billetero)->bool:
+    def agregar_registro_contador(self,fecha,maquina,casino,in_,out,jackpot,billetero)->bool:
         try:
+            codigo=max([c.codigo for c in self.__contadores])+1
             GestorArchivos.escribir_csv("CASINO/Data/Contadores.csv",[{"codigo":codigo,"fecha":fecha,"maquina":maquina.asset,"casino":casino.codigo,"in":in_,"out":out,"jackpot":jackpot,"billetero":billetero}])
             self.__contadores.append(Contador(codigo,fecha,maquina,casino,in_,out,jackpot,billetero))
             return True

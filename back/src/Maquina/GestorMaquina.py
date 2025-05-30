@@ -77,5 +77,9 @@ class GestorMaquina:
         else:
             return False
 
+    def lista_maquinas_por_casino(self,codigo_casino):
+        maquinas_por_casino=[maquina for maquina in self.__maquinas if maquina.casino.codigo==codigo_casino]
+        return maquinas_por_casino
+
     def lista_maquinas(self)->list:
         return self.__maquinas

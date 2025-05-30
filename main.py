@@ -24,17 +24,17 @@ def cargar_datos():
         gestor.gestor_cuadre_casino.set_cuadre_casinos(cuadre_casino)
         return gestor
         
-    def casinos():
+    def _casinos():
         lista_casinos=[]
         casinos=leer_csv("CASINO/Data/Casinos.csv")
         for casino in casinos:
             lista_casinos.append(Casino(casino["nombre"],casino["direccion"],int(casino["codigo"])))
         return lista_casinos    
     
-    def maquinas():
+    def _maquinas():
         lista_maquinas=[]
         maquinas=leer_csv("CASINO/Data/Maquinas.csv")
-        casinos=casinos()
+        casinos=_casinos()
         for maquina in maquinas:
             codigo_casino=int(maquina["casino"])
             for casino in casinos:
@@ -47,15 +47,15 @@ def cargar_datos():
                     )
         return lista_maquinas
     
-    def contadores():
+    def _contadores():
         lista_contadores=[]
         contadores=leer_csv("CASINO/Data/Contadores.csv")
-        maquinas=maquinas()
-        casinos=casinos()
+        maquinas=_maquinas()
+        casinos=_casinos()
         for contador in contadores:
             codigo_casino=int(contador["casino"])
             asset_maquina=int(contador["maquina"])
-            año,mes,dia=tuple(map(int,contador["fecha"].split("/")))
+            año,mes,dia=tuple(map(int,contador["fecha"].split("-")))
             fecha=date(año,mes,dia)
             for casino in casinos:
                 if casino.codigo==codigo_casino:
@@ -70,10 +70,10 @@ def cargar_datos():
                             )
         return lista_contadores
     
-    def cuadre_maquina():
+    def _cuadre_maquina():
         lista_cuadre_maquina=[]
         cuadre_maquinas=leer_csv("CASINO/Data/CuadrePorMaquina.csv")
-        maquinas=maquinas()
+        maquinas=_maquinas()
         for cuadre in cuadre_maquinas:
             asset_maquina=int(cuadre["maquina"])
             for maquina in maquinas:
@@ -86,10 +86,10 @@ def cargar_datos():
                     )
         return lista_cuadre_maquina
     
-    def cuadre_casino():
+    def _cuadre_casino():
         lista_cuadre_casino=[]
         cuadre_casinos=leer_csv("CASINO/Data/CuadrePorCasino.csv")
-        casinos=casinos()
+        casinos=_casinos()
         for cuadre in cuadre_casinos:
             codigo_casino=int(cuadre["casino"])
             for casino in casinos:
@@ -102,24 +102,24 @@ def cargar_datos():
                     )
         return lista_cuadre_casino
     
-    def usuarios():
+    def _usuarios():
         lista_usuarios=[]
         usuarios=leer_csv("CASINO/Data/Users.csv")
         for usuario in usuarios:
             if usuario["tipo"]=="Administrador":
-                lista_usuarios.append(Administrador(usuario["usuario"],usuario["contraseña"],usuario["nombre"],usuario["telefono"]))
+                lista_usuarios.append(Administrador(usuario["usuario"],usuario["contraseña"],usuario["nombre"],usuario["telefono"],usuario["estado"]))
             elif usuario["tipo"]=="Operador":
-                lista_usuarios.append(Operador(usuario["usuario"],usuario["contraseña"],usuario["nombre"],usuario["telefono"]))
+                lista_usuarios.append(Operador(usuario["usuario"],usuario["contraseña"],usuario["nombre"],usuario["telefono"],usuario["estado"]))
             elif usuario["tipo"]=="Soporte":
-                lista_usuarios.append(Soporte(usuario["usuario"],usuario["contraseña"],usuario["nombre"],usuario["telefono"]))
+                lista_usuarios.append(Soporte(usuario["usuario"],usuario["contraseña"],usuario["nombre"],usuario["telefono"],usuario["estado"]))
         return lista_usuarios
     
-    lista_casinos = casinos()
-    lista_maquinas = maquinas()
-    lista_contadores = contadores()
-    lista_usuarios = usuarios()
-    lista_cuadre_maquina = cuadre_maquina()
-    lista_cuadre_casino = cuadre_casino()
+    lista_casinos = _casinos()
+    lista_maquinas = _maquinas()
+    lista_contadores = _contadores()
+    lista_usuarios = _usuarios()
+    lista_cuadre_maquina = _cuadre_maquina()
+    lista_cuadre_casino = _cuadre_casino()
     return llenar_listas(lista_casinos, lista_maquinas, lista_contadores, lista_usuarios, lista_cuadre_maquina, lista_cuadre_casino)
 
 if __name__=="__main__":

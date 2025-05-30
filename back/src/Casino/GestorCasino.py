@@ -32,10 +32,6 @@ class GestorCasino:
                 casino.nombre=nuevo_dato
             elif atributo=="direccion":
                 casino.direccion=nuevo_dato
-            elif atributo=="codigo":
-                if self.buscar_casino(nuevo_dato):
-                    return False
-                casino.codigo=nuevo_dato
             else:
                 return False
             GestorArchivos.modificar("CASINO/Data/Casinos.csv","codigo",str(codigo),atributo,nuevo_dato)
@@ -49,7 +45,7 @@ class GestorCasino:
             return False
         if casino.activar():
             try:
-                GestorArchivos.modificar("CASINO/Data/Casinos.csv","codigo",str(codigo),"Estado","Activo")
+                GestorArchivos.modificar("CASINO/Data/Casinos.csv","codigo",str(codigo),"estado","Activo")
                 return True
             except Exception:
                 return False
@@ -62,7 +58,7 @@ class GestorCasino:
             return False
         if casino.desactivar():
             try:
-                GestorArchivos.modificar("CASINO/Data/Casinos.csv","codigo",str(codigo),"Estado","Inactivo")
+                GestorArchivos.modificar("CASINO/Data/Casinos.csv","codigo",str(codigo),"estado","Inactivo")
                 return True
             except Exception:
                 return False

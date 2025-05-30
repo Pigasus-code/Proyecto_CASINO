@@ -33,7 +33,7 @@ class GestorCuadreCasino:
             contadores_finales["jackpot"]-contadores_iniciales["jackpot"],
             contadores_finales["billetero"]-contadores_iniciales["billetero"]
         )
-        return tuple(map(lambda x: round(x,1),contadores))
+        return tuple(map(lambda x: abs(round(x,1)),contadores))
         
     
     def calculo_utilidad_por_casino(self,fecha_inicio,fecha_fin,codigo_casino,lista_contadores)->float:

@@ -61,4 +61,21 @@ class Contador:
     def __str__(self):
         return "Fecha: {}\nMauina: {}\nCasino : {}\nIn: {}\nOut :{}\nJackpot: {}\nBilletero: {}".format(
             self.__fecha,self.__maquina.asset,self.__casino.codigo,self.__in,self.__out,self.__jackpot,self.__billetero)
+        
+    def to_dict(self):
+        return {
+            "asset":self.maquina.asset,
+            "marca": self.maquina.marca,
+            "modelo": self.maquina.modelo,
+            "serial":self.maquina.serial,
+            "denominacion":self.maquina.denominacion,
+            "codigo":self.casino.codigo,
+            "nombre":self.casino.nombre,
+            "direccion":self.casino.direccion,
+            "fecha":self.fecha,
+            "in":self.in_,
+            "out":self.out,
+            "jackpot":self.jackpot,
+            "billetero":self.billetero
+        }
     

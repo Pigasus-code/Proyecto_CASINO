@@ -2,13 +2,13 @@ from abc import ABC, abstractmethod
 
 class Usuario(ABC):
     
-    def __init__(self,usuario:str,contraseña:str,nombre:str,telefono:str,tipo:str):
+    def __init__(self,usuario:str,contraseña:str,nombre:str,telefono:str,tipo:str,estado:str):
         self.__usuario=usuario
         self.__contraseña=contraseña
         self.__nombre=nombre
         self.__telefono=telefono
         self.__tipo=tipo
-        self.__estado="Activo"
+        self.__estado=estado
         
     @property
     def usuario(self):
@@ -67,3 +67,13 @@ class Usuario(ABC):
             return True
         else:
             return False
+    
+    def to_dict(self):
+        return {
+            "usuario":self.usuario,
+            "contraseña":self.contraseña,
+            "nombre":self.nombre,
+            "telefono":self.telefono,
+            "tipo":self.tipo,
+            "estado":self.estado
+        }
