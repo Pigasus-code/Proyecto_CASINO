@@ -68,8 +68,8 @@ def calculo_total_contadores(fecha_inicio: str, fecha_fin: str, asset_maquina: i
 def calculo_utilidad_maquina(fecha_inicio: str, fecha_fin: str, asset_maquina: int) -> float:
     return gestor.calculo_utilidad_maquina(fecha_inicio, fecha_fin, asset_maquina)
 
-def guardar_resultados_maquina(contadores: tuple, utilidad: float, asset_maquina: int) -> bool:
-    return  gestor.guardar_resultados_maquina(contadores, utilidad, asset_maquina)
+def guardar_resultados_maquina(contadores: tuple, utilidad: float, asset_maquina: int, fecha:str) -> bool:
+    return  gestor.guardar_resultados_maquina(contadores, utilidad, asset_maquina,fecha)
 
 # -------------------- Métodos para Cuadre por Casino --------------------
 
@@ -79,8 +79,8 @@ def total_contadores_por_casino(fecha_inicio: str, fecha_fin: str, codigo_casino
 def calculo_utilidad_por_casino(fecha_inicio: str, fecha_fin: str, codigo_casino: int) -> float:
     return gestor.calculo_utilidad_por_casino(fecha_inicio, fecha_fin, codigo_casino)
 
-def guardar_resultados_casino(contadores: tuple, utilidad: float, codigo_casino: int) -> bool:
-    return gestor.guardar_resultados_casino(contadores, utilidad, codigo_casino)
+def guardar_resultados_casino(contadores: tuple, utilidad: float, codigo_casino: int, fecha:str) -> bool:
+    return gestor.guardar_resultados_casino(contadores, utilidad, codigo_casino,fecha)
 
 # -------------------- Métodos para Reportes --------------------
 
@@ -108,8 +108,8 @@ def generar_reporte_consolidado(fecha_inicio, fecha_fin, formato,nombre) -> obje
         return resultado
     return None
 
-def generar_reporte_especial(codigo_casino, asset_maquinas, porcentaje, formato,nombre) -> object:
-    resultado = gestor.generar_reporte_especial(codigo_casino, asset_maquinas, porcentaje, formato,nombre)
+def generar_reporte_especial(inico,fin,codigo_casino, asset_maquinas, porcentaje, formato,nombre) -> object:
+    resultado = gestor.generar_reporte_especial(inico,fin,codigo_casino, asset_maquinas, porcentaje, formato,nombre)
     if resultado:
         return resultado
     return None

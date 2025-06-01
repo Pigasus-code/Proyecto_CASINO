@@ -1,1 +1,101 @@
 marca,modelo,serial,asset,casino,denominacion,estado
+IGT,S2000,SLOT100001,1,1,1000,Activa
+Aristocrat,Viridian,SLOT100002,2,1,2000,Activa
+Aristocrat,Helix,SLOT100003,3,1,2000,Activa
+Scientific Games,TwinStar,SLOT100004,4,1,4000,Activa
+Konami,KX43,SLOT100005,5,1,3000,Activa
+Konami,Podium,SLOT100006,6,1,4000,Activa
+Konami,Concerto,SLOT100007,7,1,2000,Activa
+Scientific Games,Alpha Pro,SLOT100008,8,1,2000,Activa
+Konami,KX43,SLOT100009,9,1,3000,Activa
+Aristocrat,Viridian,SLOT100010,10,1,2000,Activa
+Konami,Podium,SLOT100011,11,2,5000,Activa
+IGT,AVP,SLOT100012,12,2,5000,Activa
+Aristocrat,Viridian,SLOT100013,13,2,3000,Activa
+Aristocrat,Helix,SLOT100014,14,2,1000,Activa
+IGT,CrystalDual,SLOT100015,15,2,1000,Activa
+Konami,KX43,SLOT100016,16,2,3000,Activa
+Aristocrat,MarsX,SLOT100017,17,2,1000,Activa
+Konami,KX43,SLOT100018,18,2,5000,Activa
+Scientific Games,TwinStar,SLOT100019,19,2,2000,Activa
+Konami,Concerto,SLOT100020,20,2,5000,Activa
+IGT,AVP,SLOT100021,21,3,5000,Activa
+Scientific Games,TwinStar,SLOT100022,22,3,5000,Activa
+Scientific Games,Alpha Pro,SLOT100023,23,3,2000,Activa
+Scientific Games,Alpha Pro,SLOT100024,24,3,5000,Activa
+Konami,Podium,SLOT100025,25,3,5000,Activa
+IGT,AVP,SLOT100026,26,3,4000,Activa
+Konami,Concerto,SLOT100027,27,3,2000,Activa
+Konami,Concerto,SLOT100028,28,3,3000,Activa
+Konami,Podium,SLOT100029,29,3,5000,Activa
+Aristocrat,Viridian,SLOT100030,30,3,1000,Activa
+Scientific Games,TwinStar,SLOT100031,31,4,4000,Activa
+Konami,Podium,SLOT100032,32,4,4000,Activa
+Scientific Games,TwinStar,SLOT100033,33,4,3000,Activa
+IGT,S2000,SLOT100034,34,4,1000,Activa
+Aristocrat,Viridian,SLOT100035,35,4,2000,Activa
+Konami,KX43,SLOT100036,36,4,4000,Activa
+Konami,KX43,SLOT100037,37,4,4000,Activa
+Konami,KX43,SLOT100038,38,4,4000,Activa
+Aristocrat,Viridian,SLOT100039,39,4,4000,Activa
+Konami,Podium,SLOT100040,40,4,3000,Activa
+Aristocrat,Viridian,SLOT100041,41,5,2000,Activa
+Aristocrat,Helix,SLOT100042,42,5,1000,Activa
+Aristocrat,MarsX,SLOT100043,43,5,5000,Activa
+Scientific Games,Alpha Pro,SLOT100044,44,5,5000,Activa
+Scientific Games,TwinStar,SLOT100045,45,5,4000,Activa
+IGT,S2000,SLOT100046,46,5,3000,Activa
+IGT,S2000,SLOT100047,47,5,3000,Activa
+IGT,AVP,SLOT100048,48,5,1000,Activa
+Scientific Games,TwinStar,SLOT100049,49,5,1000,Activa
+Konami,KX43,SLOT100050,50,5,1000,Activa
+Konami,Podium,SLOT100051,51,6,1000,Activa
+Scientific Games,Alpha Pro,SLOT100052,52,6,1000,Activa
+IGT,S2000,SLOT100053,53,6,2000,Activa
+Aristocrat,MarsX,SLOT100054,54,6,4000,Activa
+IGT,CrystalDual,SLOT100055,55,6,2000,Activa
+Konami,Podium,SLOT100056,56,6,5000,Activa
+Scientific Games,Alpha Pro,SLOT100057,57,6,3000,Activa
+Scientific Games,TwinStar,SLOT100058,58,6,3000,Activa
+Konami,Concerto,SLOT100059,59,6,4000,Activa
+Konami,KX43,SLOT100060,60,6,1000,Activa
+Konami,Podium,SLOT100061,61,7,2000,Activa
+IGT,CrystalDual,SLOT100062,62,7,5000,Activa
+Konami,KX43,SLOT100063,63,7,3000,Activa
+IGT,S2000,SLOT100064,64,7,4000,Activa
+Aristocrat,Helix,SLOT100065,65,7,4000,Activa
+Scientific Games,Blade,SLOT100066,66,7,1000,Activa
+IGT,S2000,SLOT100067,67,7,3000,Activa
+Aristocrat,Helix,SLOT100068,68,7,4000,Activa
+Konami,Podium,SLOT100069,69,7,2000,Activa
+IGT,CrystalDual,SLOT100070,70,7,3000,Activa
+IGT,CrystalDual,SLOT100071,71,8,3000,Activa
+Konami,Concerto,SLOT100072,72,8,3000,Activa
+Konami,KX43,SLOT100073,73,8,4000,Activa
+Scientific Games,TwinStar,SLOT100074,74,8,4000,Activa
+IGT,CrystalDual,SLOT100075,75,8,2000,Activa
+Aristocrat,Viridian,SLOT100076,76,8,2000,Activa
+Konami,KX43,SLOT100077,77,8,1000,Activa
+IGT,CrystalDual,SLOT100078,78,8,5000,Activa
+Konami,Concerto,SLOT100079,79,8,4000,Activa
+Aristocrat,Helix,SLOT100080,80,8,1000,Activa
+Aristocrat,Viridian,SLOT100081,81,9,1000,Activa
+Konami,KX43,SLOT100082,82,9,5000,Activa
+Aristocrat,Viridian,SLOT100083,83,9,4000,Activa
+Konami,Podium,SLOT100084,84,9,1000,Activa
+IGT,CrystalDual,SLOT100085,85,9,4000,Activa
+Scientific Games,TwinStar,SLOT100086,86,9,1000,Activa
+Scientific Games,TwinStar,SLOT100087,87,9,2000,Activa
+IGT,S2000,SLOT100088,88,9,1000,Activa
+Scientific Games,Alpha Pro,SLOT100089,89,9,3000,Activa
+Konami,Concerto,SLOT100090,90,9,1000,Activa
+Aristocrat,MarsX,SLOT100091,91,10,1000,Activa
+Konami,KX43,SLOT100092,92,10,5000,Activa
+Konami,Podium,SLOT100093,93,10,1000,Activa
+Scientific Games,TwinStar,SLOT100094,94,10,4000,Activa
+Aristocrat,Viridian,SLOT100095,95,10,2000,Activa
+Konami,Concerto,SLOT100096,96,10,2000,Activa
+IGT,S2000,SLOT100097,97,10,2000,Activa
+IGT,S2000,SLOT100098,98,10,1000,Activa
+IGT,CrystalDual,SLOT100099,99,10,2000,Activa
+Scientific Games,Blade,SLOT100100,100,10,5000,Activa

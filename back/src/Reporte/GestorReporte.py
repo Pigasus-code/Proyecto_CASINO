@@ -1,7 +1,9 @@
 import pandas as pd
 from fpdf import FPDF
 import datetime
+import os
 
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 class GestorReporte:
     
@@ -11,11 +13,11 @@ class GestorReporte:
         filtros=filtros_maquina+filtros_casino+["fecha","in","out","jackpot","billetero"]
         df = df[filtros]
         if formato == "excel":
-            ruta = f"CASINO/Data/Reportes/{nombre}.xlsx"
+            ruta = os.path.join(BASE_DIR,"Data","Reportes",f"{nombre}.xlsx")
             df.to_excel(ruta, index=False)
             return ruta
         elif formato == "pdf":
-            with open("CASINO/Data/datos_empresa.txt", "r") as f:
+            with open(os.path.join(BASE_DIR,"Data","datos_empresa.txt"), "r") as f:
                 nombre_empresa = f.readline().strip()
                 telefono = f.readline().strip()
                 nit = f.readline().strip()
@@ -86,7 +88,8 @@ class GestorReporte:
                 pdf.cell(0, 10, "No hay datos agrupables por casino.", ln=True)
 
             # --- Guardar el archivo ---
-            ruta = f"CASINO/Data/Reportes/{nombre}.pdf"
+            
+            ruta = os.path.join(BASE_DIR,"Data","Reportes",f"{nombre}.pdf")
             pdf.output(ruta)
             return ruta
 
@@ -94,11 +97,11 @@ class GestorReporte:
         df = pd.DataFrame([c.to_dict() for c in maquinas])
         df = df.loc[df["asset"].isin(assets_maquinas),["asset","marca","modelo","serial","denominacion","estado","casino"]]
         if formato == "excel":
-            ruta = f"CASINO/Data/Reportes/{nombre}.xlsx"
+            ruta = os.path.join(BASE_DIR,"Data","Reportes",f"{nombre}.xlsx")
             df.to_excel(ruta, index=False)
             return ruta
         elif formato == "pdf":
-            with open("CASINO/Data/datos_empresa.txt", "r") as f:
+            with open(os.path.join(BASE_DIR,"Data","datos_empresa.txt"), "r") as f:
                 nombre_empresa = f.readline().strip()
                 telefono = f.readline().strip()
                 nit = f.readline().strip()
@@ -109,7 +112,7 @@ class GestorReporte:
 
             # — Encabezado principal —
             pdf.set_font("Arial", "B", 16)
-            pdf.cell(0, 10, "REPORTE DE MAQUINAS", ln=True, align="C")
+            pdf.cell(0, 10, "REPORTE INVENTARIO DE MAQUINAS", ln=True, align="C")
 
             fecha_hoy = datetime.date.today().strftime("%Y-%m-%d")
             pdf.set_font("Arial", "", 12)
@@ -146,7 +149,7 @@ class GestorReporte:
                 pdf.ln()
 
             # Guardar
-            ruta = f"CASINO/Data/Reportes/{nombre}.pdf"
+            ruta = os.path.join(BASE_DIR,"Data","Reportes",f"{nombre}.pdf")
             pdf.output(ruta)
             return ruta
             
@@ -164,11 +167,11 @@ class GestorReporte:
         df = pd.DataFrame([dicc for dicc in dict_casinos])
         df = df.loc[df["codigo"].isin(codigos_casinos),["codigo","nombre","direccion","estado","maquinas"]]
         if formato == "excel":
-            ruta = f"CASINO/Data/Reportes/{nombre}.xlsx"
+            ruta = os.path.join(BASE_DIR,"Data","Reportes",f"{nombre}.xlsx")
             df.to_excel(ruta, index=False)
             return ruta
         elif formato == "pdf":
-            with open("CASINO/Data/datos_empresa.txt", "r") as f:
+            with open(os.path.join(BASE_DIR,"Data","datos_empresa.txt"), "r") as f:
                 nombre_empresa = f.readline().strip()
                 telefono = f.readline().strip()
                 nit = f.readline().strip()
@@ -179,7 +182,7 @@ class GestorReporte:
 
             # — Encabezado principal —
             pdf.set_font("Arial", "B", 16)
-            pdf.cell(0, 10, "REPORTE GLOBAL DE CASINOS", ln=True, align="C")
+            pdf.cell(0, 10, "REPORTE INVENTARIO DE CASINOS", ln=True, align="C")
 
             hoy = datetime.date.today().strftime("%Y-%m-%d")
             pdf.set_font("Arial", "", 12)
@@ -213,21 +216,204 @@ class GestorReporte:
                     pdf.cell(0, 6, f"  - Máquina asset: {asset}", ln=True)
                 pdf.ln(6)
 
-            ruta = f"CASINO/Data/Reportes/{nombre}.pdf"
+            ruta = os.path.join(BASE_DIR,"Data","Reportes",f"{nombre}.pdf")
             pdf.output(ruta)
             return ruta
     
-    def generar_reporte_consolidado(self,contadores:list,fecha_inicio,fecha_fin,formato:str,nombre:str)->str:
-        """
-        generar un reporte en el formato especificado de los contadores en un rango de fecha
-        """
-        pass
+    def generar_reporte_consolidado(self,cuadre_por_casino:list,cuadre_por_maquina:list,fecha_inicio,fecha_fin,formato:str,nombre:str)->str:
+        
+        # 1) Crear DataFrames desde los to_dict() de cada lista
+        df_casino = pd.DataFrame([c.to_dict() for c in cuadre_por_casino])
+        df_maquina = pd.DataFrame([m.to_dict() for m in cuadre_por_maquina])
+
+        # Filtrar solo columnas necesarias
+        columnas_casino = ["codigo","fecha", "in", "out", "jackpot", "billetero", "utilidad"]
+        df_casino = df_casino[[c for c in columnas_casino if c in df_casino.columns]]
+
+        columnas_maquina = ["asset", "casino_codigo","fecha", "in", "out", "jackpot", "billetero", "utilidad"]
+        df_maquina = df_maquina[[c for c in columnas_maquina if c in df_maquina.columns]]
+        
+        if formato == "excel":
+            ruta = os.path.join(BASE_DIR,"Data","Reportes",f"{nombre}.xlsx")
+            # Crear un Excel con dos hojas: Cuadre_Casino y Cuadre_Maquina
+            with pd.ExcelWriter(ruta, engine="openpyxl") as writer:
+                df_casino.to_excel(writer, sheet_name="Cuadre_Casino", index=False)
+                df_maquina.to_excel(writer, sheet_name="Cuadre_Maquina", index=False)
+            return ruta
+        elif formato == "pdf":
+            with open(os.path.join(BASE_DIR,"Data","datos_empresa.txt"), "r") as f:
+                nombre_empresa = f.readline().strip()
+                telefono = f.readline().strip()
+                nit = f.readline().strip()
+                direccion_emp = f.readline().strip()
+            
+            pdf = FPDF(orientation="P", unit="mm", format="A4")
+            pdf.add_page()
+
+            # -- Encabezado principal --
+            pdf.set_font("Arial", "B", 16)
+            pdf.cell(0, 10, "REPORTE CONSOLIDADO", ln=True, align="C")
+
+            # Fecha de emisión
+            hoy = datetime.date.today().strftime("%Y-%m-%d")
+            pdf.set_font("Arial", "", 12)
+            pdf.cell(0, 8, f"Fecha de emisión: {hoy}", ln=True, align="C")
+            pdf.ln(6)
+
+            # -- Datos de la empresa --
+            pdf.set_font("Helvetica", "B", 12)
+            pdf.cell(0, 6, nombre_empresa, ln=True)
+            pdf.set_font("Helvetica", "", 10)
+            pdf.cell(0, 5, f"Tel: {telefono}   NIT: {nit}", ln=True)
+            pdf.cell(0, 5, f"Dirección: {direccion_emp}", ln=True)
+            pdf.ln(8)
+
+            # -- Sección: Cuadre por Casino --
+            pdf.set_font("Arial", "B", 14)
+            pdf.cell(0, 8, "Cuadre por Casino", ln=True)
+            pdf.ln(4)
+
+            # Encabezados de tabla: incluir Fecha
+            pdf.set_font("Courier", "B", 10)
+            encabezado_cas = ["Código","Fecha","In","Out","Jackpot","Billetero","Utilidad"]
+            anchos_cas =     [20,     25,    25,    25,       30,         30,        30]
+            for texto, ancho in zip(encabezado_cas, anchos_cas):
+                pdf.cell(ancho, 7, texto, border=1, align="C")
+            pdf.ln()
+            pdf.set_font("Courier", "", 9)
+            for _, row in df_casino.iterrows():
+                inicio,fin=str(row.get("fecha", "")).split("/")
+                x_actual = pdf.get_x()
+                y_actual = pdf.get_y()
+                pdf.cell(anchos_cas[0], 6, str(row["codigo"]), border=1)
+                pdf.set_xy(x_actual + anchos_cas[0], y_actual)
+                pdf.multi_cell(anchos_cas[1],3,f"{inicio}\n{fin}", border=1)
+                pdf.set_xy(x_actual + anchos_cas[0] + anchos_cas[1], y_actual)
+                pdf.cell(anchos_cas[2], 6, f'{row.get("in", 0):.2f}', border=1, align="R")
+                pdf.cell(anchos_cas[3], 6, f'{row.get("out", 0):.2f}', border=1, align="R")
+                pdf.cell(anchos_cas[4], 6, f'{row.get("jackpot", 0):.2f}', border=1, align="R")
+                pdf.cell(anchos_cas[5], 6, f'{row.get("billetero", 0):.2f}', border=1, align="R")
+                pdf.cell(anchos_cas[6], 6, f'{row.get("utilidad", 0):.2f}', border=1, align="R")
+                pdf.ln()
+            pdf.ln(8)
+
+            # -- Sección: Cuadre por Máquina --
+            pdf.set_font("Arial", "B", 14)
+            pdf.cell(0, 8, "Cuadre por Máquina", ln=True)
+            pdf.ln(4)
+
+            # Encabezados de tabla: incluir Fecha
+            pdf.set_font("Courier", "B", 10)
+            encabezado_maq = ["Asset","Casino","Fecha","In","Out","Jackpot","Billetero","Utilidad"]
+            anchos_maq =     [20,     25,      25,    20,    20,       25,        25,        30]
+            for texto, ancho in zip(encabezado_maq, anchos_maq):
+                pdf.cell(ancho, 7, texto, border=1, align="C")
+            pdf.ln()
+
+            pdf.set_font("Courier", "", 9)
+            for _, row in df_maquina.iterrows():
+                inicio,fin=str(row.get("fecha", "")).split("/")
+                x = pdf.get_x()
+                y = pdf.get_y()
+                h = 6  
+                h_total = 2 * 3 
+                pdf.set_xy(x, y)
+                pdf.cell(anchos_maq[0], 6, str(row["asset"]), border=1)
+                pdf.set_xy(x + anchos_maq[0], y)
+                pdf.cell(anchos_maq[1], 6, str(row.get("casino_codigo", "")), border=1)
+                pdf.set_xy(x + anchos_maq[0] + anchos_maq[1], y)
+                pdf.multi_cell(anchos_maq[1],3,f"{inicio}\n{fin}", border=1)
+                pdf.set_xy(x_actual + anchos_maq[0] + anchos_maq[1], y_actual)
+                x_dato = x + sum(anchos_maq[:3])
+                pdf.set_xy(x_dato, y)
+                pdf.cell(anchos_maq[3], 6, f'{row.get("in", 0):.2f}', border=1, align="R")
+                pdf.cell(anchos_maq[4], 6, f'{row.get("out", 0):.2f}', border=1, align="R")
+                pdf.cell(anchos_maq[5], 6, f'{row.get("jackpot", 0):.2f}', border=1, align="R")
+                pdf.cell(anchos_maq[6], 6, f'{row.get("billetero", 0):.2f}', border=1, align="R")
+                pdf.cell(anchos_maq[7], 6, f'{row.get("utilidad", 0):.2f}', border=1, align="R")
+                pdf.ln()
+                
+            ruta = os.path.join(BASE_DIR,"Data","Reportes",f"{nombre}.pdf")
+            pdf.output(ruta)
+            return ruta
+        
     
-    def generar_reporte_especial(self,codigo_casino:int,assets_maquinas:list,contadores:list,porcentaje:float,formato:str,nombre:str)->str:
-        """
-        generar un reporte en el formato especificado de un casino y una seleccion
-        de maquinas del mismo, tambien debe mostrar cual es la participacion
-        de este grupo de maquinas en la utilidad total del casino haciendo uso de un 
-        porcentaje (mirar especificacion del archivo del proyecto)
-        """
-        pass
+    def generar_reporte_especial(self,gestor,inico,fin,codigo_casino:int,assets_maquinas:list,contadores:list,porcentaje:float,formato:str,nombre:str)->str:
+        utilidad=[]
+        
+        for i in assets_maquinas:
+            a= gestor.calculo_utilidad_maquina(inico,fin,i,contadores)
+            utilidad.append(a)
+
+        utilidad_total= sum(u for u in utilidad if u is not None)
+        participacion = utilidad_total*porcentaje
+
+        df = pd.DataFrame([{
+            "Codigo": codigo_casino,
+            "Assets": ", ".join(str(asset) for asset in assets_maquinas),
+            "Porcentaje": porcentaje,
+            "Utilidad": utilidad_total,
+            "Participacion":participacion
+
+        }])
+
+        if formato =="excel":
+            ruta= os.path.join(BASE_DIR,"Data","Reportes",f"{nombre}.xlsx")
+            df.to_excel(ruta,index=False)
+            return ruta
+        
+        elif formato =="pdf":
+            with open(os.path.join(BASE_DIR,"Data","datos_empresa.txt"), "r") as f:
+                nombre_empresa = f.readline().strip()
+                telefono = f.readline().strip()
+                nit = f.readline().strip()
+                direccion_emp = f.readline().strip()
+                
+            pdf = FPDF(orientation="P", unit="mm", format="A4")
+            pdf.add_page()
+            
+            
+            # -- Encabezado principal --
+            pdf.set_font("Arial", "B", 16)
+            pdf.cell(0, 10, "REPORTE Especial", ln=True, align="C")
+
+            # Fecha de emisión
+            hoy = datetime.date.today().strftime("%Y-%m-%d")
+            pdf.set_font("Arial", "", 12)
+            pdf.cell(0, 8, f"Fecha de emisión: {hoy}", ln=True, align="C")
+            pdf.ln(6)
+
+            # -- Datos de la empresa --
+            pdf.set_font("Helvetica", "B", 12)
+            pdf.cell(0, 6, nombre_empresa, ln=True)
+            pdf.set_font("Helvetica", "", 10)
+            pdf.cell(0, 5, f"Tel: {telefono}   NIT: {nit}", ln=True)
+            pdf.cell(0, 5, f"Dirección: {direccion_emp}", ln=True)
+            pdf.ln(8)
+            
+
+            pdf.set_font("Arial", style='B', size=14)
+            pdf.cell(200, 10, txt=f"Reporte del Casino: {codigo_casino}", ln=True, align='C')
+            pdf.set_font("Arial", size=12)
+            pdf.cell(200, 10, txt=f"Fecha inicial: {inico} | Fecha final: {fin}", ln=True, align='C')
+            pdf.ln(10)
+
+            # Definimos los anchos de columna (ajusta según el texto esperado)
+            col_widths = [30, 60, 30, 30, 40]  # Debe sumar menos que el ancho de página (aprox 190mm para A4 margen incluido)
+
+            # Encabezados de la tabla
+            pdf.set_font("Arial", style='B', size=12)
+            for i, col in enumerate(df.columns):
+                pdf.cell(col_widths[i], 10, col, border=1, align='C')
+            pdf.ln()
+
+            # Datos de la tabla (primera fila del DataFrame)
+            pdf.set_font("Arial", size=12)
+            for i, col in enumerate(df.columns):
+                valor = str(df.iloc[0][col])
+                pdf.cell(col_widths[i], 10, valor, border=1, align='C')
+            pdf.ln()
+
+            ruta = os.path.join(BASE_DIR,"Data","Reportes", f"{nombre}.pdf")
+            pdf.output(ruta)
+            return ruta

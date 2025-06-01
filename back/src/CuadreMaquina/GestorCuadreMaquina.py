@@ -1,5 +1,9 @@
 from back.src.CuadreMaquina.CuadreMaquina import CuadreMaquina
 from util import GestorArchivos
+import os
+
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+PATH_FILE=os.path.join(BASE_DIR,"Data","CuadrePorMaquina.csv")
 
 class GestorCuadreMaquina:
     
@@ -66,13 +70,13 @@ class GestorCuadreMaquina:
         utilidad = (final[0]-inicial[0]) - ((final[1] -inicial[1])+ ( final[2]-inicial[2]))
         return round(utilidad,1)
 
-    def guardar_resultados(self,contadores:tuple,utilidad:float,maquina:object)->bool:
+    def guardar_resultados(self,contadores:tuple,utilidad:float,maquina:object,fecha:str)->bool:
         if not contadores or not utilidad:
             return False
         try:
             in_,out,jackpot,billetero=contadores
-            GestorArchivos.escribir_csv("CASINO/Data/CuadrePorMaquina.csv",[{"in":in_,"out":out,"jackpot":jackpot,"billetero":billetero,"utilidad":utilidad,"maquina":maquina.asset}])
-            self.__cuadre_maquina.append(CuadreMaquina(in_,out,jackpot,billetero,utilidad,maquina))
+            GestorArchivos.escribir_csv(PATH_FILE,[{"in":in_,"out":out,"jackpot":jackpot,"billetero":billetero,"utilidad":utilidad,"maquina":maquina.asset,"fecha":fecha}])
+            self.__cuadre_maquina.append(CuadreMaquina(in_,out,jackpot,billetero,utilidad,maquina,fecha))
             return True
         except:
             return False

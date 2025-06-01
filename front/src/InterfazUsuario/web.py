@@ -5,7 +5,9 @@ import toml
 import pandas as pd
 
 # Ruta del archivo de configuración
-CONFIG_PATH = "CASINO/util/.streamlit/config_usuario.toml"
+
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+CONFIG_PATH = os.path.join(BASE_DIR,"Util",".streamlit","config_usuario.tolm")
 
 # Función para guardar la configuración del tema en archivo TOML
 def guardar_configuracion_tema(primary: str,  background: str, secondary: str):
@@ -16,7 +18,7 @@ def guardar_configuracion_tema(primary: str,  background: str, secondary: str):
             "secondaryBackgroundColor": secondary
         }
     }
-    os.makedirs("CASINO/util/.streamlit", exist_ok=True)
+    os.makedirs(os.path.join(BASE_DIR,"util",".streamlit"), exist_ok=True)
     with open(CONFIG_PATH, "w") as f:
         toml.dump(config, f)
 
@@ -99,7 +101,7 @@ def app(gestor: object):
 
     # Funciones de vista
     def mostrar_login():
-        ruta_logo = "CASINO/Data/logo_casino.png"
+        ruta_logo = os.path.join(BASE_DIR,"Data","logo_casino.png")
         if os.path.exists(ruta_logo):
             st.image(ruta_logo, width=200)
         st.header("Iniciar sesión")
@@ -399,14 +401,17 @@ def app(gestor: object):
                     else:         
                         contadores = controlador.calculo_total_contadores(inicio, fin, int(asset))
                         utilidad= controlador.calculo_utilidad_maquina(inicio,fin,int(asset))
-                        st.write(f"Contadores totales:")
-                        st.write(f"in: {contadores[0]}")
-                        st.write(f"out: {contadores[1]}")
-                        st.write(f"jackpot: {contadores[2]}")
-                        st.write(f"billetero: {contadores[3]}")
-                        st.write(f"Utilidad: {utilidad}")
-                        ok = controlador.guardar_resultados_maquina(contadores, utilidad, int(asset))
-                        st.success("Resultados guardados") if ok else st.error("Error al guardar resultados")
+                        ok = controlador.guardar_resultados_maquina(contadores, utilidad, int(asset),f"{str(inicio)}/{str(fin)}")
+                        if ok:
+                            st.write(f"Contadores totales:")
+                            st.write(f"in: {contadores[0]}")
+                            st.write(f"out: {contadores[1]}")
+                            st.write(f"jackpot: {contadores[2]}")
+                            st.write(f"billetero: {contadores[3]}")
+                            st.write(f"Utilidad: {utilidad}")
+                            st.success("Resultados guardados") 
+                        else:
+                            st.error("Error al guardar resultados")
             else:
                 st.warning("No hay maquinas registradas en este casino")
         else:
@@ -430,7 +435,7 @@ def app(gestor: object):
                     else:
                         contadores=controlador.total_contadores_por_casino(inicio, fin, int(cas_cod))
                         utilidad = controlador.calculo_utilidad_por_casino(inicio, fin, int(cas_cod))
-                        ok = controlador.guardar_resultados_casino(contadores, utilidad, int(cas_cod))
+                        ok = controlador.guardar_resultados_casino(contadores, utilidad, int(cas_cod),f"{str(inicio)}/{str(fin)}")
                         if ok:    
                             st.write(f"Contadores totales:")
                             st.write(f"in: {contadores[0]}")
@@ -565,8 +570,10 @@ def app(gestor: object):
                     assets=[m.asset for m in maquinas]
                     assets_maquinas=st.multiselect("Assets",assets)
                     porcentaje = st.number_input("Porcentaje participacion",min_value=0.0, step=0.01)
+                    inico=st.date_input("Fecha incio")
+                    fin=st.date_input("Fecha fin")
                     if st.button("Generar reporte"):
-                        archivo = controlador.generar_reporte_especial(int(casino_codigo),list(map(int,assets_maquinas)),float(porcentaje),formato.lower(),nombre)
+                        archivo = controlador.generar_reporte_especial(inico,fin,int(casino_codigo),list(map(int,assets_maquinas)),float(porcentaje),formato.lower(),nombre)
                         #mirar de que tipo se necesitan los assets
                         if archivo:
                             with open(archivo, "rb") as f:
@@ -658,7 +665,7 @@ def app(gestor: object):
             imagen = st.file_uploader("Selecciona una imagen para la empresa", type=["png", "jpg", "jpeg"])
             subir = st.form_submit_button("Subir imagen")
         if subir and imagen:
-            ruta_logo = "CASINO/Data/logo_casino.png"
+            ruta_logo = os.path.join(BASE_DIR,"Data","logo_casino.png")
             with open(ruta_logo, "wb") as f:
                 f.write(imagen.read())
             st.success("Logo actualizado exitosamente")

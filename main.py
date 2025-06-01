@@ -10,6 +10,9 @@ from back.src.Usuario.Soporte import Soporte
 from front.src.InterfazUsuario.web import app
 from util.GestorArchivos import leer_csv
 from datetime import date
+import os
+
+BASE_DIR=os.path.dirname(os.path.abspath(__file__))
 
 
 def cargar_datos():
@@ -26,14 +29,14 @@ def cargar_datos():
         
     def _casinos():
         lista_casinos=[]
-        casinos=leer_csv("CASINO/Data/Casinos.csv")
+        casinos=leer_csv(os.path.join(BASE_DIR,"Data","Casinos.csv"))
         for casino in casinos:
             lista_casinos.append(Casino(casino["nombre"],casino["direccion"],int(casino["codigo"])))
         return lista_casinos    
     
     def _maquinas():
         lista_maquinas=[]
-        maquinas=leer_csv("CASINO/Data/Maquinas.csv")
+        maquinas=leer_csv(os.path.join(BASE_DIR,"Data","Maquinas.csv"))
         casinos=_casinos()
         for maquina in maquinas:
             codigo_casino=int(maquina["casino"])
@@ -49,7 +52,7 @@ def cargar_datos():
     
     def _contadores():
         lista_contadores=[]
-        contadores=leer_csv("CASINO/Data/Contadores.csv")
+        contadores=leer_csv(os.path.join(BASE_DIR,"Data","Contadores.csv"))
         maquinas=_maquinas()
         casinos=_casinos()
         for contador in contadores:
@@ -72,7 +75,7 @@ def cargar_datos():
     
     def _cuadre_maquina():
         lista_cuadre_maquina=[]
-        cuadre_maquinas=leer_csv("CASINO/Data/CuadrePorMaquina.csv")
+        cuadre_maquinas=leer_csv(os.path.join(BASE_DIR,"Data","CuadrePorMaquina.csv"))
         maquinas=_maquinas()
         for cuadre in cuadre_maquinas:
             asset_maquina=int(cuadre["maquina"])
@@ -81,14 +84,14 @@ def cargar_datos():
                     lista_cuadre_maquina.append(
                         CuadreMaquina(
                             float(cuadre["in"]),float(cuadre["out"]),float(cuadre["jackpot"]),
-                            float(cuadre["billetero"]),float(cuadre["utilidad"]),maquina
+                            float(cuadre["billetero"]),float(cuadre["utilidad"]),maquina,cuadre["fecha"]
                         )
                     )
         return lista_cuadre_maquina
     
     def _cuadre_casino():
         lista_cuadre_casino=[]
-        cuadre_casinos=leer_csv("CASINO/Data/CuadrePorCasino.csv")
+        cuadre_casinos=leer_csv(os.path.join(BASE_DIR,"Data","CuadrePorCasino.csv"))
         casinos=_casinos()
         for cuadre in cuadre_casinos:
             codigo_casino=int(cuadre["casino"])
@@ -97,14 +100,14 @@ def cargar_datos():
                     lista_cuadre_casino.append(
                         CuadreCasino(
                             float(cuadre["in"]),float(cuadre["out"]),float(cuadre["jackpot"]),
-                            float(cuadre["billetero"]),float(cuadre["utilidad"]),casino
+                            float(cuadre["billetero"]),float(cuadre["utilidad"]),casino,cuadre["fecha"]
                         )
                     )
         return lista_cuadre_casino
     
     def _usuarios():
         lista_usuarios=[]
-        usuarios=leer_csv("CASINO/Data/Users.csv")
+        usuarios=leer_csv(os.path.join(BASE_DIR,"Data","Users.csv"))
         for usuario in usuarios:
             if usuario["tipo"]=="Administrador":
                 lista_usuarios.append(Administrador(usuario["usuario"],usuario["contraseña"],usuario["nombre"],usuario["telefono"],usuario["estado"]))
@@ -125,4 +128,4 @@ def cargar_datos():
 if __name__=="__main__":
     gestor=cargar_datos()
     app(gestor)
-    
+        

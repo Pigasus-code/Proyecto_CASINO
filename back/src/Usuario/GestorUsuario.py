@@ -2,6 +2,10 @@ from back.src.Usuario.Administrador import Administrador
 from back.src.Usuario.Operador import Operador
 from back.src.Usuario.Soporte import Soporte
 from util import GestorArchivos
+import os
+
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+PATH_FILE=os.path.join(BASE_DIR,"Data","Users.csv")
 
 class GestorUsuario:
     
@@ -20,7 +24,7 @@ class GestorUsuario:
             return False
         try:
             if tipo=="Administrador":
-                with open("CASINO/Data/token_acceso.txt") as archivo:
+                with open(os.path.join(BASE_DIR,"Data","token_acceso.txt")) as archivo:
                     token_archivo=archivo.read()
                 if token_archivo==token:
                     self.__usuarios.append(Administrador(usuario,contraseña,nombre,telefono,"Activo"))
@@ -31,7 +35,7 @@ class GestorUsuario:
                 self.__usuarios.append(Operador(usuario,contraseña,nombre,telefono,"Activo"))
             elif tipo=="Soporte":
                 self.__usuarios.append(Soporte(usuario,contraseña,nombre,telefono,"Activo"))
-            GestorArchivos.escribir_csv("CASINO/Data/Users.csv",[{"usuario":usuario,"contraseña":contraseña,"nombre":nombre,"telefono":telefono,"tipo":tipo,"estado":"Activo"}])
+            GestorArchivos.escribir_csv(PATH_FILE,[{"usuario":usuario,"contraseña":contraseña,"nombre":nombre,"telefono":telefono,"tipo":tipo,"estado":"Activo"}])
             return True
         except:
             return False
@@ -62,7 +66,7 @@ class GestorUsuario:
                 usuario.telefono=nuevo_dato
             else:
                 return False
-            GestorArchivos.modificar("CASINO/Data/Users.csv","usuario",name_usuario,atributo,nuevo_dato)
+            GestorArchivos.modificar(PATH_FILE,"usuario",name_usuario,atributo,nuevo_dato)
             return True
         except Exception:
             return False
@@ -73,7 +77,7 @@ class GestorUsuario:
             return False
         if usuario.activar():
             try:
-                GestorArchivos.modificar("CASINO/Data/Users.csv","usuario",name_usuario,"estado","Activo")
+                GestorArchivos.modificar(PATH_FILE,"usuario",name_usuario,"estado","Activo")
                 return True
             except Exception:
                 return False
@@ -86,7 +90,7 @@ class GestorUsuario:
             return False
         if usuario.desactivar():
             try:
-                GestorArchivos.modificar("CASINO/Data/Users.csv","usuario",name_usuario,"estado","Inactivo")
+                GestorArchivos.modificar(PATH_FILE,"usuario",name_usuario,"estado","Inactivo")
                 return True
             except Exception:
                 return False
