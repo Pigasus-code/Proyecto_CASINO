@@ -1,0 +1,5 @@
+La carpeta front contiene el archivo web, el cual maneja toda la interfaz de usuario
+haciendo uso de la libreria de python "streamlit". Ademas el archivo controlador
+sirve como un puente entre la interfaz y la logica, cada funcio de web llama
+a una de controlador y este hace su respectivo llamado al Gestor principal. Este archivo
+centraliza todas las funciones del proyecto para teer un control mas claro y preciso.

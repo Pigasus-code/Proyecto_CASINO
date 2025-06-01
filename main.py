@@ -127,5 +127,4 @@ def cargar_datos():
 
 if __name__=="__main__":
     gestor=cargar_datos()
-    app(gestor)
-        
+    app(gestor)       
