@@ -61,6 +61,17 @@ class Maquina:
     def __str__(self):
         return "Marca: {}\nModelo: {}\nSerial: {}\nAsset: {}\nCasino: {}\nDenominacion: {}\nEstado: {}\n".format(
             self.__marca,self.__modelo,self.__serial,self.__asset,self.__casino,self.__denominacion,self.__estado)
+        
+    def to_dict(self):
+        return {
+            "asset":self.asset,
+            "marca":self.marca,
+            "modelo":self.modelo,
+            "serial":self.serial,
+            "denominacion":self.denominacion,
+            "estado":self.estado,
+            "casino":self.casino.codigo
+        }
     
     def activar(self)->bool:
         if self.__estado=="Inactiva":

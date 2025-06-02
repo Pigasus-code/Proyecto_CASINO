@@ -1,11 +1,19 @@
 from back.src.Maquina.Maquina import Maquina
 from util import GestorArchivos
+import os
+
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+PATH_FILE=os.path.join(BASE_DIR,"Data","Maquinas.csv")
+
 
 class GestorMaquina:
     
     def __init__(self, gestor_casino):
         self.__maquinas=[]
         self.__gestor_casino=gestor_casino
+    
+    def set_maquinas(self,lista_maquinas):
+        self.__maquinas=lista_maquinas
     
     def buscar_maquina(self,asset)->object:
         maquinas={maquina.asset:maquina for maquina in self.__maquinas}
@@ -15,7 +23,7 @@ class GestorMaquina:
         if self.buscar_maquina(asset):
             return False
         try:
-            GestorArchivos.escribir_csv("CASINO/Data/Maquinas.csv",[{"marca":marca,"modelo":modelo,"serial":serial,"asset":asset,"casino":casino.codigo,"denominacion":denominacion,"estado":"Activa"}])
+            GestorArchivos.escribir_csv(PATH_FILE,[{"marca":marca,"modelo":modelo,"serial":serial,"asset":asset,"casino":casino.codigo,"denominacion":denominacion,"estado":"Activa"}])
             self.__maquinas.append(Maquina(marca,modelo,serial,asset,casino,denominacion))
             return True
         except Exception:
@@ -43,7 +51,7 @@ class GestorMaquina:
                 maquina.casino=casino
             else:
                 return False
-            GestorArchivos.modificar("CASINO/Data/Maquinas.csv","asset",str(asset),str(atributo),nuevo_dato)
+            GestorArchivos.modificar(PATH_FILE,"asset",str(asset),str(atributo),nuevo_dato)
             return True
         except Exception:
             return False
@@ -54,7 +62,7 @@ class GestorMaquina:
             return False
         if maquina.activar():
             try:
-                GestorArchivos.modificar("CASINO/Data/Maquinas.csv","asset",str(asset),"estado","Activa")
+                GestorArchivos.modificar(PATH_FILE,"asset",str(asset),"estado","Activa")
                 return True
             except Exception:
                 return False
@@ -67,12 +75,16 @@ class GestorMaquina:
             return False
         if maquina.desactivar():
             try:
-                GestorArchivos.modificar("CASINO/Data/Maquinas.csv","asset",str(asset),"estado","Inactiva")
+                GestorArchivos.modificar(PATH_FILE,"asset",str(asset),"estado","Inactiva")
                 return True
             except Exception:
                 return False
         else:
             return False
+
+    def lista_maquinas_por_casino(self,codigo_casino):
+        maquinas_por_casino=[maquina for maquina in self.__maquinas if maquina.casino.codigo==codigo_casino]
+        return maquinas_por_casino
 
     def lista_maquinas(self)->list:
         return self.__maquinas

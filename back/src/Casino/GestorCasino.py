@@ -1,11 +1,19 @@
 from back.src.Casino.Casino import Casino
 from util import GestorArchivos
+import os
+
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+PATH_FILE=os.path.join(BASE_DIR,"Data","Casinos.csv")
+
 
 class GestorCasino:
     
     def __init__(self):
         self.__casinos=[]
-        
+
+    def set_casinos(self,lista_casinos):
+        self.__casinos=lista_casinos
+    
     def buscar_casino(self,codigo)->object:
         casinos={casino.codigo:casino for casino in self.__casinos}
         return casinos.get(codigo,None)
@@ -14,7 +22,7 @@ class GestorCasino:
         if self.buscar_casino(codigo):
             return False
         try:
-            GestorArchivos.escribir_csv("CASINO/Data/Casinos.csv",[{"nombre":nombre,"direccion":direccion,"codigo":codigo,"estado":"Activo"}])
+            GestorArchivos.escribir_csv(PATH_FILE,[{"nombre":nombre,"direccion":direccion,"codigo":codigo,"estado":"Activo"}])
             self.__casinos.append(Casino(nombre,direccion,codigo))
             return True
         except Exception:
@@ -29,13 +37,9 @@ class GestorCasino:
                 casino.nombre=nuevo_dato
             elif atributo=="direccion":
                 casino.direccion=nuevo_dato
-            elif atributo=="codigo":
-                if self.buscar_casino(nuevo_dato):
-                    return False
-                casino.codigo=nuevo_dato
             else:
                 return False
-            GestorArchivos.modificar("CASINO/Data/Casinos.csv","codigo",str(codigo),atributo,nuevo_dato)
+            GestorArchivos.modificar(PATH_FILE,"codigo",str(codigo),atributo,nuevo_dato)
             return True
         except Exception:
             return False
@@ -46,7 +50,7 @@ class GestorCasino:
             return False
         if casino.activar():
             try:
-                GestorArchivos.modificar("CASINO/Data/Casinos.csv","codigo",str(codigo),"Estado","Activo")
+                GestorArchivos.modificar(PATH_FILE,"codigo",str(codigo),"estado","Activo")
                 return True
             except Exception:
                 return False
@@ -59,7 +63,7 @@ class GestorCasino:
             return False
         if casino.desactivar():
             try:
-                GestorArchivos.modificar("CASINO/Data/Casinos.csv","codigo",str(codigo),"Estado","Inactivo")
+                GestorArchivos.modificar(PATH_FILE,"codigo",str(codigo),"estado","Inactivo")
                 return True
             except Exception:
                 return False

@@ -5,6 +5,7 @@ from back.src.CuadreCasino.GestorCuadreCasino import GestorCuadreCasino
 from back.src.CuadreMaquina.GestorCuadreMaquina import GestorCuadreMaquina
 from back.src.Reporte.GestorReporte import GestorReporte
 from back.src.Usuario.GestorUsuario import GestorUsuario
+from back.src.Configuracion.GestorConfiguracion import GestorConfiguracion
 
 class GestorPrincipal:
 
@@ -16,6 +17,7 @@ class GestorPrincipal:
         self.__gestor_cuadre_casino = GestorCuadreCasino()
         self.__gestor_reporte = GestorReporte()
         self.__gestor_usuario = GestorUsuario()
+        self.__gestor_configuracion=GestorConfiguracion()
     
     @property
     def gestor_casino(self):
@@ -44,6 +46,10 @@ class GestorPrincipal:
     @property
     def gestor_usuario(self):
         return self.__gestor_usuario
+    
+    @property
+    def gestor_configuracion(self):
+        return self.__gestor_configuracion
 
     # MAQUINAS
 
@@ -64,7 +70,10 @@ class GestorPrincipal:
     def desactivar_maquina(self, asset: int) -> bool:
         return self.__gestor_maquina.desactivar_maquina(asset)
 
-    def lista_maquinas(self) -> list:
+    def lista_maquinas_por_casino(self,codigo_casino) -> list:
+        return self.__gestor_maquina.lista_maquinas_por_casino(codigo_casino)
+    
+    def lista_maquinas(self):
         return self.__gestor_maquina.lista_maquinas()
 
     # CASINOS
@@ -83,6 +92,8 @@ class GestorPrincipal:
         return self.__gestor_casino.activar_casino(codigo)
 
     def desactivar_casino(self, codigo: int) -> bool:
+        if self.__gestor_maquina.lista_maquinas_por_casino(codigo):
+            return False
         return self.__gestor_casino.desactivar_casino(codigo)
 
     def filtrar_casinos(self, filtro: str) -> list:
@@ -99,14 +110,16 @@ class GestorPrincipal:
 
     # CONTADORES
 
-    def agregar_registro_contador(self,codigo:int, fecha: str, maquina_asset: int, casino_codigo: int, in_: float, out: float, jackpot: float, billetera: float) -> bool:
-        if not fecha or not isinstance(maquina_asset, int) or not isinstance(casino_codigo, int) or not isinstance(in_, float) or not isinstance(codigo,int) or not isinstance(out, float) or not isinstance(jackpot, float) or not isinstance(billetera, float):
+    def agregar_registro_contador(self, fecha: str, maquina_asset: int, casino_codigo: int, in_: float, out: float, jackpot: float, billetera: float) -> bool:
+        if not fecha or not isinstance(maquina_asset, int) or not isinstance(casino_codigo, int) or not isinstance(in_, float)  or not isinstance(out, float) or not isinstance(jackpot, float) or not isinstance(billetera, float):
             return False
         maquina = self.__gestor_maquina.buscar_maquina(maquina_asset)
         casino = self.__gestor_casino.buscar_casino(casino_codigo)
         if not maquina or not casino:
             return False
-        return self.__gestor_contador.agregar_registro_contador(codigo, fecha, maquina, casino, in_, out, jackpot, billetera)
+        if maquina.casino.codigo!=casino_codigo:
+            return False
+        return self.__gestor_contador.agregar_registro_contador( fecha, maquina, casino, in_, out, jackpot, billetera)
 
     def modificar_contador(self, codigo: int, atributo: str, nuevo_dato: any) -> bool:
         if not isinstance(codigo,int) or not atributo or not nuevo_dato :
@@ -129,13 +142,13 @@ class GestorPrincipal:
         lista_contadores = self.lista_contadores()
         return self.__gestor_cuadre_maquina.calculo_utilidad_maquina(fecha_inicio, fecha_fin, asset_maquina, lista_contadores)
 
-    def guardar_resultados_maquina(self, contadores: tuple, utilidad: float, asset_maquina: int) -> bool:
+    def guardar_resultados_maquina(self, contadores: tuple, utilidad: float, asset_maquina: int, fecha:str) -> bool:
         if not contadores or not isinstance(utilidad, float) or not isinstance(asset_maquina, int):
             return False
         maquina = self.__gestor_maquina.buscar_maquina(asset_maquina)
         if not maquina:
             return False
-        return self.__gestor_cuadre_maquina.guardar_resultados(contadores, utilidad, maquina)
+        return self.__gestor_cuadre_maquina.guardar_resultados(contadores, utilidad, maquina, fecha)
 
     # CUADRE POR CASINO
 
@@ -147,43 +160,49 @@ class GestorPrincipal:
         lista_contadores = self.lista_contadores()
         return self.__gestor_cuadre_casino.calculo_utilidad_por_casino(fecha_inicio, fecha_fin, codigo_casino, lista_contadores)
 
-    def guardar_resultados_casino(self, contadores: tuple, utilidad: float, codigo_casino: int) -> bool:
+    def guardar_resultados_casino(self, contadores: tuple, utilidad: float, codigo_casino: int, fecha:str) -> bool:
         if not contadores or not isinstance(utilidad, float) or not isinstance(codigo_casino, int):
             return False
         casino = self.__gestor_casino.buscar_casino(codigo_casino)
         if not casino:
             return False
-        return self.__gestor_cuadre_casino.guardar_resultados(contadores, utilidad, casino)
+        return self.__gestor_cuadre_casino.guardar_resultados(contadores, utilidad, casino,fecha)
 
     # REPORTES
 
-    def generar_reporte_personalizado(self, filtros_maquina: list, filtros_casino: list, fecha_inicio: str, fecha_fin: str, formato: str) -> object:
+    def generar_reporte_personalizado(self, filtros_maquina: list, filtros_casino: list, fecha_inicio: str, fecha_fin: str, formato: str, nombre: str) -> str:
         contadores = self.__gestor_contador.lista_contadores()
-        return self.__gestor_reporte.generar_reporte_personalizado(filtros_maquina, filtros_casino, contadores, fecha_inicio, fecha_fin, formato)
+        return self.__gestor_reporte.generar_reporte_personalizado(filtros_maquina, filtros_casino, contadores, fecha_inicio, fecha_fin, formato, nombre)
 
-    def generar_reporte_individual_maquina(self, asset_maquina: int, formato: str) -> object:
-        contadores = self.__gestor_contador.lista_contadores()
-        return self.__gestor_reporte.generar_reporte_individual_maquina(asset_maquina, contadores, formato)
+    def generar_reporte_individual_maquina(self, assets_maquinas: list, formato: str, nombre: str) -> str:
+        maquinas= self.__gestor_maquina.lista_maquinas()
+        return self.__gestor_reporte.generar_reporte_individual_maquina(assets_maquinas, maquinas, formato, nombre)
 
-    def generar_reporte_individual_casino(self, codigo_casino: int, formato: str) -> object:
-        contadores = self.__gestor_contador.lista_contadores()
+    def generar_reporte_individual_casino(self, codigos_casinos: list, formato: str, nombre: str) -> str:
+        casinos = self.__gestor_casino.lista_casinos()
         maquinas = self.__gestor_maquina.lista_maquinas()
-        return self.__gestor_reporte.generar_reporte_individual_casino(codigo_casino, maquinas, contadores, formato)
+        return self.__gestor_reporte.generar_reporte_individual_casino(codigos_casinos, maquinas, casinos, formato, nombre)
 
-    def generar_reporte_consolidado(self, fecha_inicio: str, fecha_fin: str, formato: str) -> object:
+    def generar_reporte_consolidado(self, fecha_inicio: str, fecha_fin: str, formato: str, nombre: str) -> str:
+        cuadre_por_casino=self.__gestor_cuadre_casino.lista_cuadre_casino()
+        cuadre_por_maquina=self.gestor_cuadre_maquina.lista_cuadre_quina()
+        return self.__gestor_reporte.generar_reporte_consolidado(cuadre_por_casino,cuadre_por_maquina, fecha_inicio, fecha_fin, formato, nombre)
+
+    def generar_reporte_especial(self,inico,fin, codigo_casino: int, asset_maquinas: list, porcentaje: float, formato: str, nombre: str) -> str:
         contadores = self.__gestor_contador.lista_contadores()
-        return self.__gestor_reporte.generar_reporte_consolidado(contadores, fecha_inicio, fecha_fin, formato)
-
-    def generar_reporte_especial(self, codigo_casino: int, asset_maquinas: list, porcentaje: float, formato: str) -> object:
-        maquinas = self.__gestor_maquina.lista_maquinas()
-        return self.__gestor_reporte.generar_reporte_especial(codigo_casino, maquinas, asset_maquinas, porcentaje, formato)
+        return self.__gestor_reporte.generar_reporte_especial(self.__gestor_cuadre_maquina,inico,fin,codigo_casino, asset_maquinas, contadores, porcentaje, formato, nombre)
 
     # USUARIO
 
-    def crear_usuario(self, usuario: str, contraseña: str, nombre: str, telefono: str, tipo: str) -> bool:
+    def crear_usuario(self, usuario: str, contraseña: str, nombre: str, telefono: str, tipo: str, token: str) -> bool:
         if not usuario or not contraseña or not nombre or not telefono or not tipo:
             return False
-        return self.__gestor_usuario.crear_usuario(usuario, contraseña, nombre, telefono, tipo)
+        return self.__gestor_usuario.crear_usuario(usuario, contraseña, nombre, telefono, tipo,token)
+    
+    def login_usuario(self,usuario:str,contraseña:str):
+        if not usuario or not contraseña:
+            return False
+        return self.__gestor_usuario.login_usuario(usuario,contraseña)
 
     def modificar_usuario(self, usuario: str, atributo: str, nuevo_dato: any) -> bool:
         if not usuario or not atributo or not nuevo_dato:
@@ -195,3 +214,18 @@ class GestorPrincipal:
 
     def desactivar_usuario(self, usuario: str) -> bool:
         return self.__gestor_usuario.desactivar_usuario(usuario)
+    
+    def lista_usuarios(self):
+        return self.__gestor_usuario.lista_usuarios()
+    
+    #CONFIGURACION
+    
+    def modificar_token(self,token):
+        if not token:
+            return False
+        return self.__gestor_configuracion.modificar_token(token)
+    
+    def modificar_datos_empresa(self,nombre,telefono,nit,direccion):
+        if not nombre or not telefono or not nit or not direccion:
+            return False
+        return self.__gestor_configuracion.modificar_datos_empresa(nombre,telefono,nit,direccion)

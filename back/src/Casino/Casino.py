@@ -36,6 +36,14 @@ class Casino:
     
     def __str__(self):
         return "{} {} {} {}".format(self.__nombre,self.__direccion,self.__codigo,self.__estado)
+
+    def to_dict(self):
+        return {
+            "nombre":self.nombre,
+            "direccion":self.direccion,
+            "codigo":self.codigo,
+            "estado":self.estado,
+        }
     
     def activar(self)->bool:
         if self.__estado=="Inactivo":

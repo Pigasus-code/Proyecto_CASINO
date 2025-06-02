@@ -1,0 +1,33 @@
+La carpeta back consta de 8 modulos, los cuales son:
+    -Casino:
+        Contiene la clase Casino la cual sirve para modelar los objetos de este tipo
+        con sus respectivos atributos. La clase GestorCasino es la encargada de
+        llevar todos los procesos referente a estos como agregar, modificar, activar,
+        desactivar, ademas crea una lista objetual para almacenar todos los casinos, la cual
+        se usa para fasilitar procesos internos.
+    -Maquina:
+        Contiene la clase Mquina la cual modela los objetos de este tipo con sus respectivos atributos,
+        la clase GestorMaquina es la encargada de llevar a cabo todos los procesos de las maquinas.
+    -Contador:
+        Contiene la clase Contador para modelar objetos de este tipo, ademas la clase gestor_contador
+        se encarga de lleva a cabo todas las funcionalidades de los contadores.
+    -CuadreCasino:
+        Cntiene una clase CuadreCasino que modela todos los registros, ademas el gestor_cuadre_casino
+        crea una lista para almacenar objetos de este tipo.
+    -CuadreMaquina:
+        Contiene una clase GestorCuadreMaquina la cual modela objetos de este tipo, el GestorCuadreMaquina
+        e encarga de llevar a cabo todas las funciones de este modulo.
+    -Reporte:
+        La clase GestorReporte es a encargada de exportar los diferentes tipos de reportes que se pueden
+        hacer, haciendo uso de las librerias pandas para reportes de excel y fpdf para reportes en pdf.
+    -Usuario:
+        Contiene la clase abstracta Usuario la cual sirve como base para crear usuarios de difirentes tipos,
+        ademas el GestorUsuario leva a cabo todas las funciones de lo usuarios, como crear, modificar
+        y verificacion de el inicio de sesion.
+    -Configuración:
+        Contiene la clase GesorConfiguracion, se encarga de llevar los porcesos de configuracion como
+        datos de la empresa o token de seguridad para la creacion de nuevos usuarios administradores.
+    
+Ademas el archivo GestorPrincipal centraliza toda la logica de negocio, llamando a cada gestor
+dependiendo de la tarea que se quiera realizar. Esta clase permite tener solo un objeto para
+llevar a cabo cualquier proceso.
