@@ -346,7 +346,7 @@ class GestorReporte:
             utilidad.append(a)
 
         utilidad_total= sum(u for u in utilidad if u is not None)
-        participacion = utilidad_total*porcentaje
+        participacion = (utilidad_total*porcentaje)/100
 
         df = pd.DataFrame([{
             "Codigo": codigo_casino,
